@@ -1,0 +1,30 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Dependency directories
+node_modules/
+
+# Configuration files
+.env
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# IDE files
+.vscode/
+
+# Executables
+*.exe
+*.out
+
+# Compiled files
+*.js.map
+*.map
+
+# System Files
+.DS_Store
+Thumbs.db
