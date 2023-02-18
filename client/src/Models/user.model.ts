@@ -1,4 +1,4 @@
 export interface UserModel {
-  id: string
+  _id: string
   email: string
 }

@@ -6,6 +6,7 @@
     "ins": "cd server && npm i && cd ../client && npm i",
     "server:dev": "npm run start --prefix server",
     "client:dev": "npm run start --prefix client",
-    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\" "
+    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\" ",
+    "pull": "cd server && git pull && cd ../client && git pull && cd .. && npm run ins"
   }
 }

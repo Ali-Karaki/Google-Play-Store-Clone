@@ -11,6 +11,7 @@ import { auth, Providers } from "../../config/firebase";
 import GoogleLogo from "../../icons/google.svg";
 import { LOCAL_STORAGE } from "../../models/localstorage.model";
 import { useNavigate } from "react-router-dom";
+import UserServices from "../../services/user.service";
 
 const useStyles = makeStyles((theme: any) => ({
   root: {
@@ -48,6 +49,9 @@ const styles = {
   googleLogo: {
     width: "15px",
     height: "15px",
+  },
+  switchTab: {
+    cursor: "pointer",
   },
 };
 
@@ -94,7 +98,7 @@ const Login = () => {
       const user = userCredential.user;
       const userToken = await userCredential.user.getIdToken();
       localStorage.setItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN, userToken);
-
+      await createUserMongo();
       navigate("/");
     } catch (error) {
       console.error(error);
@@ -103,29 +107,25 @@ const Login = () => {
 
   const handleSubmit = async (e: any) => {
     if (hasAccount) {
-      await handleLogIn(e);
-    } else {
-      await handleSignUp(e);
+        await handleLogIn(e);
+      } else {
+          await handleSignUp(e);
     }
   };
 
   const changeView = () => {
     setHasAccount(!hasAccount);
   };
-
+  
   const signInWithGoogle = async () => {
     try {
       const userCredential = await signInWithPopup(auth, Providers.google);
       const credential: any =
-        GoogleAuthProvider.credentialFromResult(userCredential);
+      GoogleAuthProvider.credentialFromResult(userCredential);
       if (credential !== null && typeof credential !== "undefined") {
         const idTokenResponse = await credential._getIdTokenResponse(auth);
         const token = idTokenResponse.idToken;
         localStorage.setItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN, token);
-        console.log(userCredential);
-        console.log(credential);
-        console.log(idTokenResponse);
-        console.log(token);
 
         navigate("/");
       }
@@ -133,7 +133,12 @@ const Login = () => {
       console.error(error);
     }
   };
-
+  
+  const createUserMongo = async () => {
+    const user = await UserServices.createUser(email);
+    localStorage.setItem(LOCAL_STORAGE.USER_ID, user._id);
+  }
+  
   return (
     <Grid
       container
@@ -198,7 +203,7 @@ const Login = () => {
               onClick={changeView}
               component="h1"
               variant="h6"
-              style={{ cursor: "pointer" }}
+              style={styles.switchTab}
             >
               {hasAccount
                 ? "Don't have an account? Sign up"

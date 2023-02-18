@@ -1,10 +1,22 @@
 import { Router } from "express";
 import { User } from "../schemas/user.schema.js";
 import { Types } from "mongoose";
+import { authenticate } from "../authenticateToken.js";
 
 const router = Router();
 
 router.get("/getUsers", async (req, res) => {
+  const authenticated = await authenticate(req);
+  if (
+    !authenticated ||
+    authenticated.status !== 200 ||
+    !authenticated.userData
+  ) {
+    const { message } = authenticated;
+    res.status(400).json({message: message, success: false});
+    return;
+  }
+
   try {
     const users = await User.find();
     res.status(200).json({ message: users, success: true });
@@ -23,6 +35,18 @@ router.get("/getUser", async (req, res) => {
 });
 
 router.post("/createUser", async (req, res) => {
+
+  const authenticated = await authenticate(req);
+  if (
+    !authenticated ||
+    authenticated.status !== 200 ||
+    !authenticated.userData
+  ) {
+    const { message } = authenticated;
+    res.status(400).json({message: message, success: false});
+    return;
+  }
+
   const { email } = req.body;
   if (!email) {
     res.status(400).json({ message: "Missing data", success: false });
@@ -33,7 +57,7 @@ router.post("/createUser", async (req, res) => {
   } catch (error) {
     res
       .status(500)
-      .json({ message: "Unable to add this user", success: false });
+      .json({ message: error, success: false });
   }
 });
 

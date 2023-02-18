@@ -1,8 +1,11 @@
 import express from "express";
 import bodyParser from "body-parser";
-import mongoose from "mongoose";  
-import cors from "cors";  
+import mongoose from "mongoose";
+import cors from "cors";
+import admin from "firebase-admin";
 import * as dotenv from "dotenv";
+import { firebaseConfig } from "./firebaseConfig.js";
+
 dotenv.config();
 
 import userRouter from "./routes/user.route.js";
@@ -10,6 +13,8 @@ import userRouter from "./routes/user.route.js";
 const port = process.env.PORT || 3000;
 
 const app = express();
+
+admin.initializeApp(firebaseConfig);
 
 try {
   mongoose.connect(process.env.mongoURI, {
@@ -24,7 +29,6 @@ try {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors());
-
 
 app.get("/", (req, res) => res.send("Hoi!"));
 
