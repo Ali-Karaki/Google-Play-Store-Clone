@@ -1,1 +1,3 @@
 /node_modules
+/client/src/config/firebaseConfig.ts
+/server/firebaseConfig.js
