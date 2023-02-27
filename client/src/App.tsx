@@ -1,25 +1,35 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
-import UserServices from "./Services/user.service";
-import { UserModel } from "./Models/user.model";
+import AuthCheck from "./components/auth/AuthChecker";
+import routes from "./config/routes";
 
 function App() {
-  const getUsersDB = async () => {
-    let resUsers = await UserServices.getUsers();
-    setUsers(resUsers.message);
-  };
-
-  const [users, setUsers] = useState<UserModel[]>([]);
-
-  useEffect(() => {
-    getUsersDB();
-  }, []);
-
   return (
     <>
-      {users.map((user, index) => {
-        return <div>{user.email}</div>;
-      })}
+      <BrowserRouter>
+        <Routes>
+          {routes.map((route) => (
+            <Route
+              key={route.name}
+              path={route.path}
+              element={
+                route.protected ? (
+                  <>
+                    <AuthCheck>
+                      <route.component />
+                    </AuthCheck>
+                  </>
+                ) : (
+                  <>
+                    <route.component />
+                  </>
+                )
+              }
+            />
+          ))}
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }
