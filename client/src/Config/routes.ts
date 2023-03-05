@@ -1,25 +1,38 @@
 import Login from "../screens/authentication/Login";
-import Home from "../screens/home/Home";
+import Games from "../screens/games/Games";
+import Movies from "../screens/movies/Movies";
 
 interface RouteType {
   path: string;
-  component: any;
+  component: () => JSX.Element;
   name: string;
   protected: boolean;
 }
 
 const routes: RouteType[] = [
   {
-    path: '',
-    component: Home,
-    name: 'Home Page',
+    path: "/games",
+    component: Games,
+    name: "Games Page",
     protected: true,
   },
   {
-    path: '/login',
+    path: "/movies",
+    component: Movies,
+    name: "Movies Page",
+    protected: true,
+  },
+  {
+    path: "/login",
     component: Login,
-    name: 'Login Page',
+    name: "Login Page",
     protected: false,
+  },
+  {
+    path: "*",
+    component: Games,
+    name: "Games Page",
+    protected: true,
   },
 ];
 
