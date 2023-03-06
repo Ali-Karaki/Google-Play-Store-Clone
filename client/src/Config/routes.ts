@@ -13,25 +13,25 @@ interface RouteType {
 
 const routes: RouteType[] = [
   {
-    path: "/games",
+    path: "/store/games",
     component: Games,
     name: "Games Page",
     protected: true,
   },
   {
-    path: "/apps",
+    path: "/store/apps",
     component: Applications,
     name: "Apps Page",
     protected: true,
   },
   {
-    path: "/movies",
+    path: "/store/movies",
     component: Movies,
     name: "Movies Page",
     protected: true,
   },
   {
-    path: "/books",
+    path: "/store/books",
     component: Books,
     name: "Books Page",
     protected: true,

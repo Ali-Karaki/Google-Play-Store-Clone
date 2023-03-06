@@ -12,7 +12,7 @@ const NavBar = () => {
   const navigate = useNavigate();
 
   const handleNavigation = (route: string) => {
-    navigate(`/${route.toLowerCase()}`);
+    navigate(`/store/${route.toLowerCase()}`);
   };
 
   const handleSearch = () => {};
@@ -50,7 +50,7 @@ const NavBar = () => {
                       sx={{
                         ...styles.links,
                         borderBottom:
-                          `/${page.toLowerCase()}` === window.location.pathname
+                          `/store/${page.toLowerCase()}` === window.location.pathname
                             ? "3px solid #002800"
                             : "none",
                       }}

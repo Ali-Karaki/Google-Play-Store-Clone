@@ -82,7 +82,7 @@ const Login = () => {
       const user = userCredential.user;
       const userToken = await userCredential.user.getIdToken();
       localStorage.setItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN, userToken);
-      navigate("/games");
+      navigate("/store/games");
     } catch (error) {
       console.error(error);
     }
@@ -99,7 +99,7 @@ const Login = () => {
       const userToken = await userCredential.user.getIdToken();
       localStorage.setItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN, userToken);
       await createUserMongo();
-      navigate("/games");
+      navigate("/store/games");
     } catch (error) {
       console.error(error);
     }
@@ -127,7 +127,7 @@ const Login = () => {
         const token = idTokenResponse.idToken;
         localStorage.setItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN, token);
 
-        navigate("/games");
+        navigate("/store/games");
       }
     } catch (error) {
       console.error(error);
