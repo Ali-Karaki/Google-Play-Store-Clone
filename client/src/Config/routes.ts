@@ -1,6 +1,8 @@
 import Login from "../screens/authentication/Login";
+import Books from "../screens/books/Books";
 import Games from "../screens/games/Games";
 import Movies from "../screens/movies/Movies";
+import Applications from "../screens/apps/Applications";
 
 interface RouteType {
   path: string;
@@ -17,9 +19,21 @@ const routes: RouteType[] = [
     protected: true,
   },
   {
+    path: "/apps",
+    component: Applications,
+    name: "Apps Page",
+    protected: true,
+  },
+  {
     path: "/movies",
     component: Movies,
     name: "Movies Page",
+    protected: true,
+  },
+  {
+    path: "/books",
+    component: Books,
+    name: "Books Page",
     protected: true,
   },
   {
