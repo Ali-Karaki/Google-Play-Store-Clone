@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AppBar, Box, Toolbar, Button, Typography } from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SearchIcon from "@mui/icons-material/Search";
 import googlePlayIcon from "../../icons/Google_Play_Logo.png";
+import SearchBar from "./SearchBar";
+import AccountPopover from "./AccountPopover";
 
 const NavBar = () => {
   const PAGES = ["Games", "Apps", "Movies", "Books"];
@@ -15,7 +16,12 @@ const NavBar = () => {
     navigate(`/store/${route.toLowerCase()}`);
   };
 
-  const handleSearch = () => {};
+  const [isSearching, setIsSearching] = useState(false);
+  const [search, setSearch] = useState("");
+
+  const handleSearch = () => {
+    setIsSearching(true);
+  };
   const handleHelp = () => {};
   const handleProfile = () => {};
 
@@ -40,36 +46,49 @@ const NavBar = () => {
                 Google Play
               </Typography>
 
-              <Box sx={styles.pages}>
-                {PAGES.map((page) => {
-                  return (
-                    <Typography
-                      key={page}
-                      onClick={() => handleNavigation(page)}
-                      textTransform="none"
-                      sx={{
-                        ...styles.links,
-                        borderBottom:
-                          `/store/${page.toLowerCase()}` === window.location.pathname
-                            ? "3px solid #002800"
-                            : "none",
-                      }}
-                    >
-                      {page}
-                    </Typography>
-                  );
-                })}
-              </Box>
+              {!isSearching && (
+                <Box sx={styles.pages}>
+                  {PAGES.map((page) => {
+                    return (
+                      <Typography
+                        key={page}
+                        onClick={() => handleNavigation(page)}
+                        textTransform="none"
+                        sx={{
+                          ...styles.links,
+                          borderBottom:
+                            `/store/${page.toLowerCase()}` ===
+                            window.location.pathname
+                              ? "3px solid #002800"
+                              : "none",
+                        }}
+                      >
+                        {page}
+                      </Typography>
+                    );
+                  })}
+                </Box>
+              )}
             </Box>
           </Box>
+          {isSearching && (
+            <SearchBar
+              value={search}
+              onChange={(e: any) => {
+                setSearch(e.target.value);
+              }}
+              onBlur={() => setIsSearching(false)}
+            ></SearchBar>
+          )}
           <Box sx={styles.mainCols}>
             <Box sx={styles.iconsGroup}>
-              <SearchIcon onClick={handleSearch} sx={styles.rightIcons} />
+              {!isSearching && (
+                <SearchIcon onClick={handleSearch} sx={styles.rightIcons} />
+              )}
               <HelpOutlineIcon onClick={handleHelp} sx={styles.rightIcons} />
-              <AccountCircleIcon
-                onClick={handleProfile}
-                sx={styles.rightIcons}
-              />
+              <AccountPopover>
+                <></>
+              </AccountPopover>
             </Box>
           </Box>
         </Toolbar>
@@ -107,6 +126,7 @@ const styles = {
   iconsGroup: {
     display: "flex",
     flexDirection: "row",
+    marginTop: "20px",
     marginRight: "20px",
   },
   icon: {
