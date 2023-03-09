@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { TextField, Button, Grid, Paper, Typography } from "@material-ui/core";
+import { TextField, Button, Grid, Paper, Typography, Theme } from "@material-ui/core";
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
@@ -13,7 +13,7 @@ import { LOCAL_STORAGE } from "../../models/localstorage.model";
 import { useNavigate } from "react-router-dom";
 import UserServices from "../../services/user.service";
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     height: "100vh",
   },
@@ -82,7 +82,7 @@ const Login = () => {
       const user = userCredential.user;
       const userToken = await userCredential.user.getIdToken();
       localStorage.setItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN, userToken);
-      navigate("/");
+      navigate("/store/games");
     } catch (error) {
       console.error(error);
     }
@@ -99,7 +99,7 @@ const Login = () => {
       const userToken = await userCredential.user.getIdToken();
       localStorage.setItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN, userToken);
       await createUserMongo();
-      navigate("/");
+      navigate("/store/games");
     } catch (error) {
       console.error(error);
     }
@@ -127,7 +127,7 @@ const Login = () => {
         const token = idTokenResponse.idToken;
         localStorage.setItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN, token);
 
-        navigate("/");
+        navigate("/store/games");
       }
     } catch (error) {
       console.error(error);
