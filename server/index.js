@@ -8,7 +8,10 @@ import { firebaseConfig } from "./firebaseConfig.js";
 
 dotenv.config();
 
-import userRouter from "./routes/user.route.js";
+import userRouter from "./routes/user.routes.js";
+import appsRouter from "./routes/apps.routes.js";
+import movieRouter from "./routes/movie.routes.js";
+import bookRouter from "./routes/book.routes.js";
 
 const port = process.env.PORT || 3000;
 
@@ -33,6 +36,9 @@ app.use(cors());
 app.get("/", (req, res) => res.send("Hoi!"));
 
 app.use("/users", userRouter);
+app.use("/apps", appsRouter);
+app.use("/movies", movieRouter);
+app.use("/books", bookRouter);
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
