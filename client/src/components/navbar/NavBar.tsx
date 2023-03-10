@@ -27,7 +27,7 @@ const NavBar = () => {
 
   return (
     <Box sx={styles.container}>
-      <AppBar position="static">
+      <AppBar sx={styles.appBar} position="static">
         <Toolbar sx={styles.toolbar}>
           <Box sx={styles.mainCols}>
             <Box sx={styles.navLinks}>
@@ -104,6 +104,11 @@ const styles = {
     width: "100%",
     marginTop: "-16px",
     zIndex: "1",
+    marginLeft: "-20px",
+  },
+  appBar: {
+    boxShadow: "none",
+    position: "fixed",
   },
   navLinks: {
     display: "flex",
@@ -134,7 +139,7 @@ const styles = {
   },
   appBarLabel: {
     fontFamily: "'Google Sans', 'Roboto', 'Arial', sans-serif",
-    fontWeight: "500",
+    fontWeight: "600",
     color: "#5F6368",
     fontSize: "22px",
     textAlign: "left",
@@ -142,11 +147,11 @@ const styles = {
   },
   links: {
     fontFamily: "'Google Sans', 'Roboto', 'Arial', sans-serif",
-    fontWeight: "500",
+    fontWeight: "600",
     color: "#5F6368",
     fontSize: "14px",
     textAlign: "left",
-    margin: "0px 15px",
+    margin: "0px 15px !important",
     padding: "20px 0px",
   },
   mainCols: {
