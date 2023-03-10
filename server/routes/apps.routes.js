@@ -17,10 +17,32 @@ router.get("/getApps", async (req, res) => {
   }
 
   try {
-    const apps = await Apps.find();
+    const filter = { type: "app" };
+    const apps = await Apps.find(filter);
     res.status(200).json({ message: apps, success: true });
   } catch (error) {
     res.status(404).json({ message: "No apps found", success: false });
+  }
+});
+
+router.get("/getGames", async (req, res) => {
+  const authenticated = await authenticate(req);
+  if (
+    !authenticated ||
+    authenticated.status !== 200 ||
+    !authenticated.userData
+  ) {
+    const { message } = authenticated;
+    res.status(400).json({ message: message, success: false });
+    return;
+  }
+
+  try {
+    const filter = { type: "game" };
+    const games = await Apps.find(filter);
+    res.status(200).json({ message: games, success: true });
+  } catch (error) {
+    res.status(404).json({ message: "No games found", success: false });
   }
 });
 
