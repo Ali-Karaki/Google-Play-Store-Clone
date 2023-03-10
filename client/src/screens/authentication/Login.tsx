@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { TextField, Button, Grid, Paper, Typography, Theme } from "@material-ui/core";
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
@@ -12,6 +11,14 @@ import GoogleLogo from "../../icons/google.svg";
 import { LOCAL_STORAGE } from "../../models/localstorage.model";
 import { useNavigate } from "react-router-dom";
 import UserServices from "../../services/user.service";
+import {
+  Button,
+  Grid,
+  Paper,
+  TextField,
+  Theme,
+  Typography,
+} from "@mui/material";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -107,21 +114,21 @@ const Login = () => {
 
   const handleSubmit = async (e: any) => {
     if (hasAccount) {
-        await handleLogIn(e);
-      } else {
-          await handleSignUp(e);
+      await handleLogIn(e);
+    } else {
+      await handleSignUp(e);
     }
   };
 
   const changeView = () => {
     setHasAccount(!hasAccount);
   };
-  
+
   const signInWithGoogle = async () => {
     try {
       const userCredential = await signInWithPopup(auth, Providers.google);
       const credential: any =
-      GoogleAuthProvider.credentialFromResult(userCredential);
+        GoogleAuthProvider.credentialFromResult(userCredential);
       if (credential !== null && typeof credential !== "undefined") {
         const idTokenResponse = await credential._getIdTokenResponse(auth);
         const token = idTokenResponse.idToken;
@@ -133,12 +140,12 @@ const Login = () => {
       console.error(error);
     }
   };
-  
+
   const createUserMongo = async () => {
     const user = await UserServices.createUser(email);
     localStorage.setItem(LOCAL_STORAGE.USER_ID, user._id);
-  }
-  
+  };
+
   return (
     <Grid
       container
