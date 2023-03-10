@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import AuthCheck from "./components/auth/AuthChecker";
+import FilteringNavBar from "./components/filteringNavBar/FilteringNavBar";
 import NavBar from "./components/navbar/NavBar";
 import routes from "./config/routes";
 
@@ -19,6 +20,7 @@ function App() {
                   <>
                     <AuthCheck>
                       <NavBar />
+                      <FilteringNavBar />
                       <route.component />
                     </AuthCheck>
                   </>

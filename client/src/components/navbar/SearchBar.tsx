@@ -1,6 +1,6 @@
 import React from "react";
-import { TextField, InputAdornment } from "@material-ui/core";
 import SearchIcon from "@mui/icons-material/Search";
+import { InputAdornment, TextField } from "@mui/material";
 
 interface SearchBarProps {
   value: string;
