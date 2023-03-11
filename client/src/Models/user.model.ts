@@ -6,9 +6,10 @@ export interface WishlistItem {
   logo: string;
 }
 
-export interface UserModel  {
+export interface UserModel {
   _id: string;
   name: string;
   email: string;
+  rememberMe: boolean;
   wishlist: WishlistItem[];
 }

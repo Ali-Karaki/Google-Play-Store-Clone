@@ -58,13 +58,11 @@ const CarouselComponent = ({ data }: CarouselProps) => {
 };
 
 const Item = ({ chunk, onHover, offHover }: ItemProps) => {
-  const clickItem = (item: CarouselData) => {
-    console.log(item.id);
-  };
+  const clickItem = (item: CarouselData) => {};
   return (
     <Box sx={styles.container} onMouseEnter={onHover} onMouseLeave={offHover}>
       {chunk.map((item) => (
-        <Box sx={styles.item} onClick={() => clickItem(item)}>
+        <Box sx={styles.item} key={item.id} onClick={() => clickItem(item)}>
           <img
             style={styles.img}
             src="https://drive.google.com/uc?id=1CDaAsMzMmKeC3EcbAeh3MT-eRz_K63O5"

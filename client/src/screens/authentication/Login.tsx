@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { Checkbox, FormControlLabel } from "@material-ui/core";
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
@@ -20,57 +21,24 @@ import {
   Typography,
 } from "@mui/material";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    height: "100vh",
-  },
-  paper: {
-    margin: theme.spacing(8, 4),
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  form: {
-    width: "100%",
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
-
-const styles = {
-  parentContainer: {
-    marginLeft: "25%",
-    marginTop: "5%",
-    height: "50%",
-  },
-  providerButton: {
-    border: "none",
-    borderWidth: "2px",
-    borderRadius: 28,
-    marginLeft: "1%",
-    marginBottom: "4%",
-    width: "100%",
-  },
-  googleLogo: {
-    width: "15px",
-    height: "15px",
-  },
-  switchTab: {
-    cursor: "pointer",
-  },
-};
-
 const Login = () => {
   const navigate = useNavigate();
 
   const classes = useStyles();
 
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [hasAccount, setHasAccount] = useState(true);
+  const [rememberMe, setRememberMe] = useState(false);
 
+  const handleNameChange = (e: any) => {
+    setUsername(e.target.value);
+  };
+
+  const handleCheckboxChange = (e: any) => {
+    setRememberMe(e.target.checked);
+  };
   const handleEmailChange = (e: any) => {
     setEmail(e.target.value);
   };
@@ -88,6 +56,8 @@ const Login = () => {
       );
       const user = userCredential.user;
       const userToken = await userCredential.user.getIdToken();
+      const userModel = await UserServices.getUser(email);
+      localStorage.setItem(LOCAL_STORAGE.USER_ID, userModel._id);
       localStorage.setItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN, userToken);
       navigate("/store/games");
     } catch (error) {
@@ -105,7 +75,7 @@ const Login = () => {
       const user = userCredential.user;
       const userToken = await userCredential.user.getIdToken();
       localStorage.setItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN, userToken);
-      await createUserMongo();
+      await createUser();
       navigate("/store/games");
     } catch (error) {
       console.error(error);
@@ -141,8 +111,8 @@ const Login = () => {
     }
   };
 
-  const createUserMongo = async () => {
-    const user = await UserServices.createUser(email);
+  const createUser = async () => {
+    const user = await UserServices.createUser(username, email, rememberMe);
     localStorage.setItem(LOCAL_STORAGE.USER_ID, user._id);
   };
 
@@ -159,6 +129,20 @@ const Login = () => {
             <Typography component="h1" variant="h5">
               {hasAccount ? "Log in" : "Sign up"}
             </Typography>
+
+            {!hasAccount && (
+              <TextField
+                variant="outlined"
+                margin="normal"
+                required
+                fullWidth
+                label="Name"
+                name="name"
+                autoFocus
+                value={username}
+                onChange={handleNameChange}
+              />
+            )}
             <TextField
               variant="outlined"
               margin="normal"
@@ -206,6 +190,20 @@ const Login = () => {
             >
               Continue With Google
             </Button>
+            {!hasAccount && (
+              <>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={rememberMe}
+                      onChange={handleCheckboxChange}
+                      color="primary"
+                    />
+                  }
+                  label="Remember me"
+                />
+              </>
+            )}
             <Typography
               onClick={changeView}
               component="h1"
@@ -221,6 +219,48 @@ const Login = () => {
       </Grid>
     </Grid>
   );
+};
+
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    height: "100vh",
+  },
+  paper: {
+    margin: theme.spacing(8, 4),
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  form: {
+    width: "100%",
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}));
+
+const styles = {
+  parentContainer: {
+    marginLeft: "25%",
+    marginTop: "5%",
+    height: "50%",
+  },
+  providerButton: {
+    border: "none",
+    borderWidth: "2px",
+    borderRadius: 28,
+    marginLeft: "1%",
+    marginBottom: "4%",
+    width: "100%",
+  },
+  googleLogo: {
+    width: "15px",
+    height: "15px",
+  },
+  switchTab: {
+    cursor: "pointer",
+  },
 };
 
 export default Login;
