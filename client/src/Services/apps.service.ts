@@ -7,10 +7,10 @@ async function getApps(): Promise<AppModel[]> {
   const authToken = localStorage.getItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN);
   const headers = { Authorization: `Bearer ${authToken}` };
 
-  const res = await axios.get(`${environment.webApi}apps/getApps`, {
+  const res = await axios.get(`${environment.devAPI}/apps/getApps`, {
     headers: headers,
   });
-  
+
   return res.data.message;
 }
 
@@ -18,7 +18,7 @@ async function getGames(): Promise<AppModel[]> {
   const authToken = localStorage.getItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN);
   const headers = { Authorization: `Bearer ${authToken}` };
 
-  const res = await axios.get(`${environment.webApi}apps/getGames`, {
+  const res = await axios.get(`${environment.devAPI}/apps/getGames`, {
     headers: headers,
   });
   return res.data.message;
