@@ -25,8 +25,8 @@ export const checkTokenExpiration = async () => {
   const expirationTime = decodedToken.exp * 1000;
   const now = Date.now();
   const timeLeft = expirationTime - now;
-
   const rememberMe: boolean = (await UserServices.getUser()).rememberMe;
+  const loginPage = "http://localhost:3000/login";
 
   // if token expired
   if (expirationTime < now) {
@@ -34,7 +34,10 @@ export const checkTokenExpiration = async () => {
       refreshToken();
     } else {
       // redirect to login
-      window.location.reload();
+      localStorage.removeItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN);
+      if (window.location.href !== loginPage) {
+        window.location.replace(loginPage);
+      }
     }
     // else set timer to timeLeft so refresh
   } else {

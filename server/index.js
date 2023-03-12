@@ -13,7 +13,7 @@ import appsRouter from "./routes/apps.routes.js";
 import movieRouter from "./routes/movie.routes.js";
 import bookRouter from "./routes/book.routes.js";
 
-const port = process.env.PORT || 3000;
+const port = 3001;
 
 const app = express();
 
