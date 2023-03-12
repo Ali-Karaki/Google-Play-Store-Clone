@@ -2,6 +2,7 @@ import { getAuth } from "firebase/auth";
 import { LOCAL_STORAGE } from "../models/localstorage.model";
 import jwt_decode from "jwt-decode";
 import UserServices from "./user.service";
+import { environment } from "../config/environment";
 
 const auth = getAuth();
 
@@ -26,7 +27,7 @@ export const checkTokenExpiration = async () => {
   const now = Date.now();
   const timeLeft = expirationTime - now;
   const rememberMe: boolean = (await UserServices.getUser()).rememberMe;
-  const loginPage = "http://localhost:3000/login";
+  const loginPage = `${environment.devHost}/login`;
 
   // if token expired
   if (expirationTime < now) {
@@ -35,7 +36,7 @@ export const checkTokenExpiration = async () => {
     } else {
       // redirect to login
       localStorage.removeItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN);
-      if (window.location.href !== loginPage) {
+      if (window.location.pathname !== "/login") {
         window.location.replace(loginPage);
       }
     }

@@ -13,7 +13,7 @@ async function createUser(
 
   const data = { name, email, rememberMe };
 
-  const res = await axios.post(`${environment.webApi}users/createUser`, data, {
+  const res = await axios.post(`${environment.devAPI}/users/createUser`, data, {
     headers: headers,
   });
   return res.data.message;
@@ -22,7 +22,7 @@ async function createUser(
 async function getUser(email?: string): Promise<UserModel> {
   const userId = localStorage.getItem(LOCAL_STORAGE.USER_ID);
   const data = typeof email === "undefined" ? { userId } : { email };
-  const res = await axios.post(`${environment.webApi}users/getUser`, data, {});
+  const res = await axios.post(`${environment.devAPI}/users/getUser`, data, {});
   return res.data.message;
 }
 
