@@ -9,6 +9,10 @@ const UserSchema = new Schema({
     type: String,
     required: true,
   },
+  rememberMe: {
+    type: Boolean,
+    required: true,
+  },
   email: {
     type: String,
     required: true,

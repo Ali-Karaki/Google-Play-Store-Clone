@@ -13,7 +13,7 @@ router.get("/getUsers", async (req, res) => {
     !authenticated.userData
   ) {
     const { message } = authenticated;
-    res.status(400).json({message: message, success: false});
+    res.status(400).json({ message: message, success: false });
     return;
   }
 
@@ -25,9 +25,13 @@ router.get("/getUsers", async (req, res) => {
   }
 });
 
-router.get("/getUser", async (req, res) => {
+router.post("/getUser", async (req, res) => {
   try {
-    const user = await User.findById(req.body.id);
+    const { userId } = req.body;
+    const { email } = req.body;
+    const filter =
+      typeof email !== "undefined" ? { email: email } : { _id: userId };
+    const user = await User.findOne(filter);
     res.status(200).json({ message: user, success: true });
   } catch (error) {
     res.status(404).json({ message: "No user found", success: false });
@@ -35,7 +39,6 @@ router.get("/getUser", async (req, res) => {
 });
 
 router.post("/createUser", async (req, res) => {
-
   const authenticated = await authenticate(req);
   if (
     !authenticated ||
@@ -43,21 +46,19 @@ router.post("/createUser", async (req, res) => {
     !authenticated.userData
   ) {
     const { message } = authenticated;
-    res.status(400).json({message: message, success: false});
+    res.status(400).json({ message: message, success: false });
     return;
   }
 
-  const { email } = req.body;
-  if (!email) {
+  const { name, email, rememberMe } = req.body;
+  if (!name || !email || !rememberMe) {
     res.status(400).json({ message: "Missing data", success: false });
   }
   try {
     let user = await User.create(req.body);
     res.status(200).json({ message: user, success: true });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: error, success: false });
+    res.status(500).json({ message: error, success: false });
   }
 });
 
@@ -66,7 +67,7 @@ router.put("/editUser", async (req, res) => {
   const newUser = req.body.newUser;
   if (!id || !newUser) {
     return res.status(400).json({ message: "Missing data", success: false });
-  } 
+  }
   try {
     const user = await User.findByIdAndUpdate(
       id,
