@@ -55,7 +55,13 @@ router.post("/createUser", async (req, res) => {
     res.status(400).json({ message: "Missing data", success: false });
   }
   try {
-    let user = await User.create(req.body);
+    let user = await User.create({
+      name: name,
+      rememberMe: rememberMe,
+      email: email,
+      wishlist: [],
+      isAdmin: false,
+    });
     res.status(200).json({ message: user, success: true });
   } catch (error) {
     res.status(500).json({ message: error, success: false });

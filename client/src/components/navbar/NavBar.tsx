@@ -1,19 +1,35 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { AppBar, Box, Toolbar, Button, Typography } from "@mui/material";
 import HelpOutlineIcon from "@mui/icons-material/HelpOutline";
 import SearchIcon from "@mui/icons-material/Search";
+import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
+import "firebase/auth";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { auth } from "../../config/firebase";
 import googlePlayIcon from "../../icons/Google_Play_Logo.png";
-import SearchBar from "./SearchBar";
+import { LOCAL_STORAGE } from "../../models/localstorage.model";
 import AccountPopover from "./AccountPopover";
+import ListItems, { ListItemI } from "./ListItems";
+import SearchBar from "./SearchBar";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 
 const NavBar = () => {
   const PAGES = ["Games", "Apps", "Movies", "Books"];
 
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const [accountData, setAccountData] = useState<ListItemI[]>([]);
 
   const handleNavigation = (route: string) => {
-    navigate(`/store/${route.toLowerCase()}`);
+    let path = `/store/${route.toLowerCase()}`;
+
+    const isAdminMode =
+      localStorage.getItem(LOCAL_STORAGE.IS_ADMIN_MODE) === "true";
+
+    console.log("isAdminMode handleNavigation ", isAdminMode);
+    path = isAdminMode ? "/admin" + path : path;
+    navigate(path);
   };
 
   const [isSearching, setIsSearching] = useState(false);
@@ -22,8 +38,59 @@ const NavBar = () => {
   const handleSearch = () => {
     setIsSearching(true);
   };
+
   const handleHelp = () => {};
-  const handleProfile = () => {};
+
+  const signOut = async () => {
+    localStorage.removeItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN);
+    await auth.signOut();
+    localStorage.clear();
+    navigate("/login");
+  };
+
+  const adminMode = () => {
+    const isAdmin = localStorage.getItem(LOCAL_STORAGE.IS_ADMIN);
+    if (isAdmin) {
+      const isAdminMode: boolean =
+        localStorage.getItem(LOCAL_STORAGE.IS_ADMIN_MODE) === "true";
+
+      if (isAdminMode) {
+        navigate(`/store/apps`);
+      } else {
+        navigate(`/admin/store/apps`);
+      }
+      localStorage.setItem(
+        LOCAL_STORAGE.IS_ADMIN_MODE,
+        (!isAdminMode).toString()
+      );
+    }
+  };
+
+  const getAccountData = () => {
+    const data = [
+      {
+        key: "signout",
+        label: "Sign out",
+        onClick: () => signOut(),
+        icon: <ExitToAppIcon />,
+      },
+      {
+        key: "admin",
+        label: "Admin",
+        onClick: () => adminMode(),
+        icon: <AdminPanelSettingsIcon />,
+      },
+    ];
+    if (!LOCAL_STORAGE.IS_ADMIN) {
+      setAccountData(data.filter((btn) => btn.key === "admin"));
+    }
+    setAccountData(data);
+  };
+
+  useEffect(() => {
+    getAccountData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
 
   return (
     <Box sx={styles.container}>
@@ -56,11 +123,11 @@ const NavBar = () => {
                         textTransform="none"
                         sx={{
                           ...styles.links,
-                          borderBottom:
-                            `/store/${page.toLowerCase()}` ===
-                            window.location.pathname
-                              ? "3px solid #002800"
-                              : "none",
+                          borderBottom: window.location.pathname.includes(
+                            page.toLowerCase()
+                          )
+                            ? "3px solid #002800"
+                            : "none",
                         }}
                       >
                         {page}
@@ -87,7 +154,7 @@ const NavBar = () => {
               )}
               <HelpOutlineIcon onClick={handleHelp} sx={styles.rightIcons} />
               <AccountPopover>
-                <></>
+                <ListItems data={accountData} />
               </AccountPopover>
             </Box>
           </Box>

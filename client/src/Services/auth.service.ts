@@ -32,7 +32,7 @@ export const checkTokenExpiration = async () => {
   // if token expired
   if (expirationTime < now) {
     if (rememberMe) {
-      refreshToken();
+      await refreshToken();
     } else {
       // redirect to login
       localStorage.removeItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN);

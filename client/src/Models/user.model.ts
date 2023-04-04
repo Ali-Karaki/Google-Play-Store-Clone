@@ -12,4 +12,5 @@ export interface UserModel {
   email: string;
   rememberMe: boolean;
   wishlist: WishlistItem[];
+  isAdmin: boolean;
 }

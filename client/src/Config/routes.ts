@@ -3,8 +3,9 @@ import Books from "../screens/books/Books";
 import Games from "../screens/games/Games";
 import Movies from "../screens/movies/Movies";
 import Applications from "../screens/apps/Applications";
+import Admin from "../screens/admin/Admin";
 
-interface RouteType {
+export interface RouteType {
   path: string;
   component: () => JSX.Element;
   name: string;
@@ -34,6 +35,12 @@ const routes: RouteType[] = [
     path: "/store/books",
     component: Books,
     name: "Books Page",
+    protected: true,
+  },
+  {
+    path: "/admin/store/:page",
+    component: Admin,
+    name: "Admin Page",
     protected: true,
   },
   {

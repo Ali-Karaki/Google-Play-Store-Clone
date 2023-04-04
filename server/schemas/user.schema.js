@@ -43,6 +43,10 @@ const UserSchema = new Schema({
       },
     },
   ],
+  isAdmin: {
+    type: Boolean,
+    required: true,
+  },
 });
 
 const User = model("User", UserSchema);
