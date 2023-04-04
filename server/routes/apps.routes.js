@@ -96,4 +96,32 @@ router.post("/createApp", async (req, res) => {
   }
 });
 
+router.post("/deleteApp", async (req, res) => {
+  const authenticated = await authenticate(req);
+  if (
+    !authenticated ||
+    authenticated.status !== 200 ||
+    !authenticated.userData
+  ) {
+    const { message } = authenticated;
+    res.status(400).json({ message: message, success: false });
+    return;
+  }
+
+  try {
+    const { appId } = req.body;
+    const app = await Apps.findByIdAndDelete(appId);
+
+    if (!app) {
+      return res.status(404).json({ message: "App not found", success: false });
+    }
+
+    res
+      .status(200)
+      .json({ message: "App deleted successfully", success: true });
+  } catch (error) {
+    res.status(400).json({ message: error.message, success: false });
+  }
+});
+
 export default router;

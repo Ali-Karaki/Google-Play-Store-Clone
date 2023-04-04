@@ -1,19 +1,18 @@
-import React from "react";
 import {
+  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Paper,
 } from "@mui/material";
 import { TableComponentProps } from "./Table.types";
 
 import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
 
-const TableComponent = ({ data }: TableComponentProps) => {
+const TableComponent = ({ data, deleteItem }: TableComponentProps) => {
+
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -34,8 +33,8 @@ const TableComponent = ({ data }: TableComponentProps) => {
               <TableCell>{row.name}</TableCell>
               <TableCell>{row.description}</TableCell>
               <TableCell>
-                <DeleteIcon />
-                <EditIcon />
+                <DeleteIcon onClick={() => deleteItem(row._id)} />
+                {/* <EditIcon onClick={() => openModal(row)} /> */}
               </TableCell>
             </TableRow>
           ))}
