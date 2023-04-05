@@ -3,12 +3,15 @@ import Popover from "@mui/material/Popover";
 import Button from "@mui/material/Button";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Box } from "@mui/material";
+import { useLocation } from "react-router-dom";
 
 interface AccountPopoverProps {
   children: React.ReactNode;
 }
 
 export default function AccountPopover({ children }: AccountPopoverProps) {
+  const location = useLocation();
+
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
   );
@@ -23,6 +26,10 @@ export default function AccountPopover({ children }: AccountPopoverProps) {
 
   const open = Boolean(anchorEl);
   const id = open ? "simple-popover" : undefined;
+
+  React.useEffect(() => {
+    setAnchorEl(null);
+  }, [location]);
 
   return (
     <div>

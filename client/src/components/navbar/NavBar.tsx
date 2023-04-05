@@ -11,6 +11,7 @@ import AccountPopover from "./AccountPopover";
 import ListItems, { ListItemI } from "./ListItems";
 import SearchBar from "./SearchBar";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import AddIcon from "@mui/icons-material/Add";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 
 const NavBar = () => {
@@ -66,31 +67,69 @@ const NavBar = () => {
     }
   };
 
+  const addItem = () => {
+    const isAdmin = localStorage.getItem(LOCAL_STORAGE.IS_ADMIN);
+    if (isAdmin) {
+      const isAdminMode: boolean =
+        localStorage.getItem(LOCAL_STORAGE.IS_ADMIN_MODE) === "true";
+
+      if (isAdminMode) {
+        navigate(`/admin/addItem`);
+      }
+    }
+  };
+
   const getAccountData = () => {
     const data = [
       {
-        key: "signout",
-        label: "Sign out",
-        onClick: () => signOut(),
-        icon: <ExitToAppIcon />,
-      },
-      {
         key: "admin",
+        isAdmin: true,
+        isAdminMode: false,
         label: "Admin",
         onClick: () => adminMode(),
         icon: <AdminPanelSettingsIcon />,
       },
+      {
+        key: "addItem",
+        isAdmin: true,
+        isAdminMode: true,
+        label: "Add Item",
+        onClick: () => addItem(),
+        icon: <AddIcon />,
+      },
+      {
+        key: "signout",
+        isAdmin: false,
+        isAdminMode: false,
+        label: "Sign out",
+        onClick: () => signOut(),
+        icon: <ExitToAppIcon />,
+      },
     ];
-    if (!LOCAL_STORAGE.IS_ADMIN) {
-      setAccountData(data.filter((btn) => btn.key === "admin"));
-    }
-    setAccountData(data);
+
+    const filteredData = data
+      .filter(
+        (item) =>
+          !(
+            localStorage.getItem(LOCAL_STORAGE.IS_ADMIN) === "false" &&
+            item.isAdmin
+          )
+      )
+      .filter(
+        (item) =>
+          !(
+            localStorage.getItem(LOCAL_STORAGE.IS_ADMIN_MODE) === "false" &&
+            item.isAdminMode
+          )
+      );
+
+    setAccountData(filteredData);
   };
 
   useEffect(() => {
     getAccountData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location.pathname]);
+  }, [location]);
 
   return (
     <Box sx={styles.container}>

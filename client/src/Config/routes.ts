@@ -4,6 +4,7 @@ import Games from "../screens/games/Games";
 import Movies from "../screens/movies/Movies";
 import Applications from "../screens/apps/Applications";
 import Admin from "../screens/admin/Admin";
+import AddItem from "../screens/addItem/AddItem";
 
 export interface RouteType {
   path: string;
@@ -41,6 +42,12 @@ const routes: RouteType[] = [
     path: "/admin/store/:page",
     component: Admin,
     name: "Admin Page",
+    protected: true,
+  },
+  {
+    path: "/admin/addItem",
+    component: AddItem,
+    name: "Add Item Page",
     protected: true,
   },
   {

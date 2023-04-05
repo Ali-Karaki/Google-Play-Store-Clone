@@ -87,7 +87,7 @@ const Admin = () => {
 
 const styles = {
   container: {
-    margin: "3% 7%",
+    margin: "2% 7%",
     position: "relative",
     zIndex: 0,
   },
