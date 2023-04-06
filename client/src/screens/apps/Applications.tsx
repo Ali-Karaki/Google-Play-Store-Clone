@@ -17,7 +17,7 @@ const Applications = () => {
 
   const getCarouselData = (data: AppModel[]): CarouselData[] => {
     return data.map((item: AppModel) => ({
-      id: item._id,
+      id: item._id!,
       name: item.name,
       logo: item.logo,
       stars: item.stars,

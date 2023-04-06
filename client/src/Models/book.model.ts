@@ -1,9 +1,8 @@
 export interface BookModel {
-  _id: string;
+  _id?: string;
   name: string;
   company: string;
   logo: string;
-  pictures: string[];
   releasedOn: Date;
   description: string;
   ageRestrictions: string;

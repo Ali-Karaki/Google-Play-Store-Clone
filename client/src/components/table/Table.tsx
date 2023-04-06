@@ -8,10 +8,19 @@ import {
   TableRow,
 } from "@mui/material";
 import { TableComponentProps } from "./Table.types";
+import EditIcon from "@mui/icons-material/Edit";
 
 import DeleteIcon from "@mui/icons-material/Delete";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const TableComponent = ({ data, deleteItem }: TableComponentProps) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const page = location.pathname.split("/admin/store/")[1];
+
+  const editItem = (item: any) => {
+    navigate(`/admin/${page}/editItem/${item.name}`, { state: { item } });
+  };
 
   return (
     <TableContainer component={Paper}>
@@ -25,16 +34,16 @@ const TableComponent = ({ data, deleteItem }: TableComponentProps) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((row, index) => (
+          {data.map((item, index) => (
             <TableRow key={index}>
               <TableCell component="th" scope="row">
-                <img src={row.logo} alt={row.name} width="50" />
+                <img src={item.logo} alt={item.name} width="50" />
               </TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.description}</TableCell>
+              <TableCell>{item.name}</TableCell>
+              <TableCell>{item.description}</TableCell>
               <TableCell>
-                <DeleteIcon onClick={() => deleteItem(row._id)} />
-                {/* <EditIcon onClick={() => openModal(row)} /> */}
+                <DeleteIcon onClick={() => deleteItem(item._id)} />
+                <EditIcon onClick={() => editItem(item)} />
               </TableCell>
             </TableRow>
           ))}

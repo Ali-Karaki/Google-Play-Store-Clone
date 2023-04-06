@@ -7,7 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { auth } from "../../config/firebase";
 import googlePlayIcon from "../../icons/Google_Play_Logo.png";
 import { LOCAL_STORAGE } from "../../models/localstorage.model";
-import AccountPopover from "./AccountPopover";
+import PopoverComp from "./PopoverComp";
 import ListItems, { ListItemI } from "./ListItems";
 import SearchBar from "./SearchBar";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
@@ -28,7 +28,6 @@ const NavBar = () => {
     const isAdminMode =
       localStorage.getItem(LOCAL_STORAGE.IS_ADMIN_MODE) === "true";
 
-    console.log("isAdminMode handleNavigation ", isAdminMode);
     path = isAdminMode ? "/admin" + path : path;
     navigate(path);
   };
@@ -67,18 +66,6 @@ const NavBar = () => {
     }
   };
 
-  const addItem = () => {
-    const isAdmin = localStorage.getItem(LOCAL_STORAGE.IS_ADMIN);
-    if (isAdmin) {
-      const isAdminMode: boolean =
-        localStorage.getItem(LOCAL_STORAGE.IS_ADMIN_MODE) === "true";
-
-      if (isAdminMode) {
-        navigate(`/admin/addItem`);
-      }
-    }
-  };
-
   const getAccountData = () => {
     const data = [
       {
@@ -94,7 +81,7 @@ const NavBar = () => {
         isAdmin: true,
         isAdminMode: true,
         label: "Add Item",
-        onClick: () => addItem(),
+        onClick: () => {},
         icon: <AddIcon />,
       },
       {
@@ -192,9 +179,9 @@ const NavBar = () => {
                 <SearchIcon onClick={handleSearch} sx={styles.rightIcons} />
               )}
               <HelpOutlineIcon onClick={handleHelp} sx={styles.rightIcons} />
-              <AccountPopover>
+              <PopoverComp>
                 <ListItems data={accountData} />
-              </AccountPopover>
+              </PopoverComp>
             </Box>
           </Box>
         </Toolbar>
@@ -207,6 +194,7 @@ const styles = {
   container: {
     flexGrow: 1,
     position: "absolute",
+    top: 10,
     width: "100%",
     marginTop: "-16px",
     zIndex: "1",

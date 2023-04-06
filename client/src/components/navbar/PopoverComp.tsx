@@ -9,7 +9,7 @@ interface AccountPopoverProps {
   children: React.ReactNode;
 }
 
-export default function AccountPopover({ children }: AccountPopoverProps) {
+export default function PopoverComp({ children }: AccountPopoverProps) {
   const location = useLocation();
 
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
@@ -64,7 +64,7 @@ const styles = {
     padding: "0px",
   },
   content: {
-    width: "25vw",
+    width: "15vw",
     height: "80vh",
   },
 };

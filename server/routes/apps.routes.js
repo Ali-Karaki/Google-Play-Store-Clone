@@ -62,7 +62,6 @@ router.post("/createApp", async (req, res) => {
       "name",
       "company",
       "logo",
-      "pictures",
       "devices",
       "type",
       "version",
@@ -77,7 +76,6 @@ router.post("/createApp", async (req, res) => {
       "isOffline",
       "tags",
       "isEditorChoice",
-      "dataSafety",
     ];
     const missingFields = requiredFields.filter(
       (field) => !(field in req.body)

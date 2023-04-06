@@ -25,6 +25,15 @@ async function getGames(): Promise<AppModel[]> {
   return res.data.message;
 }
 
+async function createApp(app: AppModel): Promise<ResponseI> {
+  const authToken = localStorage.getItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN);
+  const headers = { Authorization: `Bearer ${authToken}` };
+  const res = await axios.post(`${environment.devAPI}/apps/createApp`, app, {
+    headers: headers,
+  });
+  return res.data;
+}
+
 async function deleteApp(appId: string): Promise<ResponseI> {
   const authToken = localStorage.getItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN);
   const headers = { Authorization: `Bearer ${authToken}` };
@@ -32,8 +41,8 @@ async function deleteApp(appId: string): Promise<ResponseI> {
   const res = await axios.post(`${environment.devAPI}/apps/deleteApp`, data, {
     headers: headers,
   });
-  return res.data.message;
+  return res.data;
 }
 
-const AppsServices = { getApps, getGames, deleteApp };
+const AppsServices = { getApps, getGames, createApp, deleteApp };
 export default AppsServices;

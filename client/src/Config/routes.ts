@@ -4,7 +4,7 @@ import Games from "../screens/games/Games";
 import Movies from "../screens/movies/Movies";
 import Applications from "../screens/apps/Applications";
 import Admin from "../screens/admin/Admin";
-import AddItem from "../screens/addItem/AddItem";
+import ItemAddEdit from "../screens/addItem/ItemAddEdit";
 
 export interface RouteType {
   path: string;
@@ -45,9 +45,9 @@ const routes: RouteType[] = [
     protected: true,
   },
   {
-    path: "/admin/addItem",
-    component: AddItem,
-    name: "Add Item Page",
+    path: "/admin/:action/:page/:name?",
+    component: ItemAddEdit,
+    name: "Add Edit Item Page",
     protected: true,
   },
   {
