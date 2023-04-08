@@ -1,8 +1,3 @@
-/**
- * 
- * not tested
- */
-
 import React from "react";
 import { Formik, Form } from "formik";
 import * as Yup from "yup";
@@ -24,25 +19,25 @@ const BookModelSchema = Yup.object().shape({
   name: Yup.string().required("Required"),
   company: Yup.string().required("Required"),
   logo: Yup.string().required("Required"),
-  releasedOn: Yup.date(),
+  releasedOn: Yup.date().required(),
   description: Yup.string().required("Required"),
   ageRestrictions: Yup.string().required("Required"),
   price: Yup.number().required("Required"),
   aboutAuthor: Yup.string().required("Required"),
-  isComic: Yup.boolean(),
+  isComic: Yup.boolean().required(),
   category: Yup.string().required("Required"),
   type: Yup.string().required("Required"),
   pages: Yup.number().test("pages", "Required", function (value) {
-    const { category } = this.parent;
-    return category === "ebook" ? !!value : true;
+    const { type } = this.parent;
+    return type === "Ebook" ? !!value : true;
   }),
   duration: Yup.string().test("duration", "Required", function (value) {
-    const { category } = this.parent;
-    return category === "audiobook" ? !!value : true;
+    const { type } = this.parent;
+    return type === "Audiobook" ? !!value : true;
   }),
   narratedBy: Yup.string().test("narratedBy", "Required", function (value) {
-    const { category } = this.parent;
-    return category === "audiobook" ? !!value : true;
+    const { type } = this.parent;
+    return type === "Audiobook" ? !!value : true;
   }),
 });
 
@@ -116,7 +111,7 @@ const BookAddEdit = ({ editingBook }: any) => {
               name="releasedOn"
               label="Released On"
               type="date"
-              value={values.releasedOn.toISOString().substr(0, 10)}
+              value={values.releasedOn.toString().substring(0, 10)}
               InputLabelProps={{
                 shrink: true,
               }}
@@ -131,16 +126,26 @@ const BookAddEdit = ({ editingBook }: any) => {
               error={touched.description && !!errors.description}
               helperText={touched.description && errors.description}
             />
-            <TextField
-              sx={{ margin: "13px 0px" }}
-              fullWidth
-              name="ageRestrictions"
-              label="Age Restrictions"
-              value={values.ageRestrictions}
-              onChange={handleChange}
-              error={touched.ageRestrictions && !!errors.ageRestrictions}
-              helperText={touched.ageRestrictions && errors.ageRestrictions}
-            />
+            <FormControl fullWidth sx={{ margin: "13px 0px" }}>
+              <InputLabel>Age Restriction</InputLabel>
+              <Select
+                name="ageRestrictions"
+                label="Age Restriction"
+                value={values.ageRestrictions}
+                onChange={handleChange}
+              >
+                <MenuItem value="G">G</MenuItem>
+                <MenuItem value="PG">PG</MenuItem>
+                <MenuItem value="PG-13">PG-13</MenuItem>
+                <MenuItem value="R">R</MenuItem>
+                <MenuItem value="NC-17">NC-17</MenuItem>
+              </Select>
+              {!!errors.ageRestrictions && (
+                <Box color="error.main" fontSize="0.75rem" mt={1}>
+                  {errors.ageRestrictions}
+                </Box>
+              )}
+            </FormControl>
             <TextField
               sx={{ margin: "13px 0px" }}
               fullWidth
@@ -191,31 +196,43 @@ const BookAddEdit = ({ editingBook }: any) => {
               label="Is Comic"
             />
             <FormControl fullWidth sx={{ margin: "13px 0px" }}>
+              <InputLabel>Type</InputLabel>
+              <Select
+                name="type"
+                value={values.type}
+                onChange={handleChange}
+                error={touched.type && !!errors.type}
+              >
+                <MenuItem value="Ebook">Ebook</MenuItem>
+                <MenuItem value="Audiobook">Audiobook</MenuItem>
+              </Select>
+              {touched.type && errors.type && (
+                <Box color="error.main">{errors.type}</Box>
+              )}
+            </FormControl>
+
+            <FormControl fullWidth sx={{ margin: "13px 0px" }}>
               <InputLabel>Category</InputLabel>
               <Select
                 name="category"
+                label="Category"
                 value={values.category}
                 onChange={handleChange}
-                error={touched.category && !!errors.category}
               >
-                <MenuItem value="ebook">eBook</MenuItem>
-                <MenuItem value="audiobook">Audiobook</MenuItem>
+                <MenuItem value="Fiction">Fiction</MenuItem>
+                <MenuItem value="Non-Fiction">Non-Fiction</MenuItem>
+                <MenuItem value="Mystery">Mystery</MenuItem>
+                <MenuItem value="Science Fiction">Science Fiction</MenuItem>
+                <MenuItem value="Romance">Romance</MenuItem>
               </Select>
-              {touched.category && errors.category && (
-                <Box color="error.main">{errors.category}</Box>
+              {!!errors.category && (
+                <Box color="error.main" fontSize="0.75rem" mt={1}>
+                  {errors.category}
+                </Box>
               )}
             </FormControl>
-            <TextField
-              sx={{ margin: "13px 0px" }}
-              fullWidth
-              name="type"
-              label="Type"
-              value={values.type}
-              onChange={handleChange}
-              error={touched.type && !!errors.type}
-              helperText={touched.type && errors.type}
-            />
-            {values.category === "ebook" && (
+
+            {values.type === "Ebook" && (
               <TextField
                 sx={{ margin: "13px 0px" }}
                 fullWidth
@@ -228,7 +245,7 @@ const BookAddEdit = ({ editingBook }: any) => {
                 helperText={touched.pages && errors.pages}
               />
             )}
-            {values.category === "audiobook" && (
+            {values.type === "Audiobook" && (
               <>
                 <TextField
                   sx={{ margin: "13px 0px" }}

@@ -36,30 +36,6 @@ router.post("/createMovie", async (req, res) => {
     return;
   }
   try {
-    const requiredFields = [
-      "name",
-      "company",
-      "logo",
-      "releasedOn",
-      "duration",
-      "description",
-      "ageRestrictions",
-      "price",
-      "stars",
-      "downloads",
-      "tags",
-      "isEditorChoice",
-    ];
-    const missingFields = requiredFields.filter(
-      (field) => !(field in req.body)
-    );
-    if (missingFields.length > 0) {
-      return res.status(400).json({
-        message: `Missing fields: ${missingFields.join(", ")}`,
-        success: false,
-      });
-    }
-
     const movie = await Movie.create(req.body);
     res.status(200).json({ message: movie, success: true });
   } catch (error) {

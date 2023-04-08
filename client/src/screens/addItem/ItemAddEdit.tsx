@@ -9,7 +9,6 @@ const ItemAddEdit = () => {
   const location = useLocation();
   const page = location.pathname;
   const item = location.state?.item;
-  console.log(page);
 
   return (
     <Box sx={styles.container}>
@@ -17,10 +16,10 @@ const ItemAddEdit = () => {
         <AppAddEdit editingApp={page.includes("editItem") ? item : null} />
       )}
       {page.includes("movie") && (
-        <MovieAddEdit editingApp={page.includes("editItem") ? item : null} />
+        <MovieAddEdit editingMovie={page.includes("editItem") ? item : null} />
       )}
       {page.includes("book") && (
-        <BookAddEdit editingApp={page.includes("editItem") ? item : null} />
+        <BookAddEdit editingBook={page.includes("editItem") ? item : null} />
       )}
     </Box>
   );

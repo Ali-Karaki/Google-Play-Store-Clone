@@ -5,14 +5,19 @@ export interface BookModel {
   logo: string;
   releasedOn: Date;
   description: string;
-  ageRestrictions: string;
+  ageRestrictions: "G" | "PG" | "PG-13" | "R" | "NC-17";
   price: number;
   stars: number;
   downloads: number;
   aboutAuthor: string;
   isComic: boolean;
-  category: string;
-  type: string;
+  category:
+    | "Fiction"
+    | "Non-Fiction"
+    | "Mystery"
+    | "Science Fiction"
+    | "Romance";
+  type: "Ebook" | "Audiobook";
   pages?: number;
   duration?: string;
   narratedBy?: string;

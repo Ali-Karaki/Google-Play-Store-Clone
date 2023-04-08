@@ -58,35 +58,6 @@ router.post("/createApp", async (req, res) => {
     return;
   }
   try {
-    const requiredFields = [
-      "name",
-      "company",
-      "logo",
-      "devices",
-      "type",
-      "version",
-      "releasedOn",
-      "updatedOn",
-      "size",
-      "description",
-      "ageRestrictions",
-      "price",
-      "stars",
-      "downloads",
-      "isOffline",
-      "tags",
-      "isEditorChoice",
-    ];
-    const missingFields = requiredFields.filter(
-      (field) => !(field in req.body)
-    );
-    if (missingFields.length > 0) {
-      return res.status(400).json({
-        message: `Missing fields: ${missingFields.join(", ")}`,
-        success: false,
-      });
-    }
-
     const app = await Apps.create(req.body);
     res.status(200).json({ message: app, success: true });
   } catch (error) {

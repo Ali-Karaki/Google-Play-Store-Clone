@@ -23,15 +23,15 @@ const AppModelSchema = Yup.object().shape({
   devices: Yup.array().min(1, "Select at least one device"),
   type: Yup.string().required("Required"),
   version: Yup.string().required("Required"),
-  releasedOn: Yup.date(),
-  updatedOn: Yup.date(),
+  releasedOn: Yup.date().required(),
+  updatedOn: Yup.date().required(),
   size: Yup.number().required("Required"),
   description: Yup.string().required("Required"),
   ageRestrictions: Yup.string().required("Required"),
   price: Yup.number().required("Required"),
-  isOffline: Yup.boolean(),
+  isOffline: Yup.boolean().required(),
   tags: Yup.array().min(1, "Select at least one tag"),
-  isEditorChoice: Yup.boolean(),
+  isEditorChoice: Yup.boolean().required(),
 });
 
 const AppAddEdit = ({ editingApp }: any) => {
@@ -104,8 +104,6 @@ const AppAddEdit = ({ editingApp }: any) => {
               stars: 0,
               downloads: 0,
             } as any);
-            console.log(res);
-            console.log(res.success);
             if (res.success) {
               setSuccessSnackbarOpen(true);
             } else {
@@ -158,9 +156,9 @@ const AppAddEdit = ({ editingApp }: any) => {
                   Array.isArray(selected) ? selected.join(", ") : ""
                 }
               >
-                <MenuItem value="phone">Phone</MenuItem>
-                <MenuItem value="tablet">Tablet</MenuItem>
-                <MenuItem value="tv">TV</MenuItem>
+                <MenuItem value="Phone">Phone</MenuItem>
+                <MenuItem value="Tablet">Tablet</MenuItem>
+                <MenuItem value="TV">TV</MenuItem>
               </Select>
               {!!errors.devices && (
                 <Box color="error.main" fontSize="0.75rem" mt={1}>
@@ -176,8 +174,8 @@ const AppAddEdit = ({ editingApp }: any) => {
                 value={values.type}
                 onChange={handleChange}
               >
-                <MenuItem value="app">App</MenuItem>
-                <MenuItem value="game">Game</MenuItem>
+                <MenuItem value="App">App</MenuItem>
+                <MenuItem value="Game">Game</MenuItem>
               </Select>
               {!!errors.type && (
                 <Box color="error.main" fontSize="0.75rem" mt={1}>
@@ -242,16 +240,26 @@ const AppAddEdit = ({ editingApp }: any) => {
               error={touched.description && !!errors.description}
               helperText={touched.description && errors.description}
             />
-            <TextField
-              sx={{ margin: "13px 0px" }}
-              fullWidth
-              name="ageRestrictions"
-              label="Age Restrictions"
-              value={values.ageRestrictions}
-              onChange={handleChange}
-              error={touched.ageRestrictions && !!errors.ageRestrictions}
-              helperText={touched.ageRestrictions && errors.ageRestrictions}
-            />
+            <FormControl fullWidth sx={{ margin: "13px 0px" }}>
+              <InputLabel>Age Restriction</InputLabel>
+              <Select
+                name="ageRestrictions"
+                label="Age Restriction"
+                value={values.ageRestrictions}
+                onChange={handleChange}
+              >
+                <MenuItem value="G">G</MenuItem>
+                <MenuItem value="PG">PG</MenuItem>
+                <MenuItem value="PG-13">PG-13</MenuItem>
+                <MenuItem value="R">R</MenuItem>
+                <MenuItem value="NC-17">NC-17</MenuItem>
+              </Select>
+              {!!errors.ageRestrictions && (
+                <Box color="error.main" fontSize="0.75rem" mt={1}>
+                  {errors.ageRestrictions}
+                </Box>
+              )}
+            </FormControl>
             <TextField
               sx={{ margin: "13px 0px" }}
               fullWidth
@@ -285,12 +293,15 @@ const AppAddEdit = ({ editingApp }: any) => {
                   Array.isArray(selected) ? selected.join(", ") : ""
                 }
               >
-                <MenuItem value="social">Social</MenuItem>
-                <MenuItem value="productivity">Productivity</MenuItem>
-                <MenuItem value="entertainment">Entertainment</MenuItem>
-                <MenuItem value="lifestyle">Lifestyle</MenuItem>
-                <MenuItem value="utilities">Utilities</MenuItem>
-                <MenuItem value="education">Education</MenuItem>
+                <MenuItem value="Business">Business</MenuItem>
+                <MenuItem value="Communication">Communication</MenuItem>
+                <MenuItem value="Finance">Finance</MenuItem>
+                <MenuItem value="Health">Health</MenuItem>
+                <MenuItem value="Travel">Travel</MenuItem>
+                <MenuItem value="Action">Action</MenuItem>
+                <MenuItem value="Arcade">Arcade</MenuItem>
+                <MenuItem value="Sports">Sports</MenuItem>
+                <MenuItem value="Simulation">Simulation</MenuItem>
               </Select>
               {!!errors.tags && (
                 <Box color="error.main" fontSize="0.75rem" mt={1}>
