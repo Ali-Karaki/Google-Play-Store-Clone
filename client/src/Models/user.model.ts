@@ -14,3 +14,8 @@ export interface UserModel {
   wishlist: WishlistItem[];
   isAdmin: boolean;
 }
+
+export interface UserResponse {
+  message: UserModel;
+  success: boolean
+}

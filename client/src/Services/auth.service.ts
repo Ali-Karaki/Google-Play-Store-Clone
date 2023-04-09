@@ -19,6 +19,7 @@ const signOut = async () => {
   localStorage.removeItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN);
   await auth.signOut();
   localStorage.clear();
+  sessionStorage.clear();
   window.location.href = loginPage;
 };
 
@@ -35,7 +36,7 @@ export const checkTokenExpiration = async () => {
   const expirationTime = decodedToken.exp * 1000;
   const now = Date.now();
   const timeLeft = expirationTime - now;
-  const rememberMe: boolean = (await UserServices.getUser()).rememberMe;
+  const rememberMe: boolean = (await UserServices.getUser()).message.rememberMe;
 
   // if token expired
   if (expirationTime < now) {

@@ -13,15 +13,15 @@ router.get("/getUsers", async (req, res) => {
     !authenticated.userData
   ) {
     const { message } = authenticated;
-    res.status(400).json({ message: message, success: false });
+    return res.status(400).json({ message: message, success: false });
     return;
   }
 
   try {
     const users = await User.find();
-    res.status(200).json({ message: users, success: true });
+    return res.status(200).json({ message: users, success: true });
   } catch (error) {
-    res.status(404).json({ message: "No users found", success: false });
+    return res.status(404).json({ message: "No users found", success: false });
   }
 });
 
@@ -32,10 +32,12 @@ router.post("/getUser", async (req, res) => {
     const filter =
       typeof email !== "undefined" ? { email: email } : { _id: userId };
     const user = await User.findOne(filter);
-    res.status(200).json({ message: user, success: true });
-  } catch (error) {
-    res.status(404).json({ message: "No user found", success: false });
-  }
+    if (user === null) {
+      return res.status(404).json({ message: "No user found", success: false });
+    } else {
+      return res.status(200).json({ message: user, success: true });
+    }
+  } catch (error) {}
 });
 
 router.post("/createUser", async (req, res) => {
@@ -46,14 +48,11 @@ router.post("/createUser", async (req, res) => {
     !authenticated.userData
   ) {
     const { message } = authenticated;
-    res.status(400).json({ message: message, success: false });
+    return res.status(400).json({ message: message, success: false });
     return;
   }
 
   const { name, email, rememberMe } = req.body;
-  if (!name || !email || !rememberMe) {
-    res.status(400).json({ message: "Missing data", success: false });
-  }
   try {
     let user = await User.create({
       name: name,
@@ -62,9 +61,9 @@ router.post("/createUser", async (req, res) => {
       wishlist: [],
       isAdmin: false,
     });
-    res.status(200).json({ message: user, success: true });
+    return res.status(200).json({ message: user, success: true });
   } catch (error) {
-    res.status(500).json({ message: error, success: false });
+    return res.status(500).json({ message: error, success: false });
   }
 });
 
@@ -91,7 +90,7 @@ router.put("/editUser", async (req, res) => {
 router.post("/deleteUser", async (req, res) => {
   const { userId } = req.body;
   if (!userId || !Types.ObjectId.isValid(userId)) {
-    res.status(400).json({ message: "No such user", success: false });
+    return res.status(400).json({ message: "No such user", success: false });
   }
   try {
     let user = await User.deleteOne({ id: userId });

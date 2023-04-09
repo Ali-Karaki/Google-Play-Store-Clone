@@ -12,15 +12,15 @@ router.get("/getBooks", async (req, res) => {
     !authenticated.userData
   ) {
     const { message } = authenticated;
-    res.status(400).json({ message: message, success: false });
+    return res.status(400).json({ message: message, success: false });
     return;
   }
 
   try {
     const books = await Book.find();
-    res.status(200).json({ message: books, success: true });
+    return res.status(200).json({ message: books, success: true });
   } catch (error) {
-    res.status(404).json({ message: "No books found", success: false });
+    return res.status(404).json({ message: "No books found", success: false });
   }
 });
 
@@ -32,14 +32,14 @@ router.post("/createBook", async (req, res) => {
     !authenticated.userData
   ) {
     const { message } = authenticated;
-    res.status(400).json({ message: message, success: false });
+    return res.status(400).json({ message: message, success: false });
     return;
   }
   try {
     const book = await Book.create(req.body);
-    res.status(200).json({ message: book, success: true });
+    return res.status(200).json({ message: book, success: true });
   } catch (error) {
-    res.status(400).json({ message: error.message, success: false });
+    return res.status(400).json({ message: error.message, success: false });
   }
 });
 
@@ -51,7 +51,7 @@ router.post("/deleteBook", async (req, res) => {
     !authenticated.userData
   ) {
     const { message } = authenticated;
-    res.status(400).json({ message: message, success: false });
+    return res.status(400).json({ message: message, success: false });
     return;
   }
 
@@ -69,7 +69,7 @@ router.post("/deleteBook", async (req, res) => {
       .status(200)
       .json({ message: "Book deleted successfully", success: true });
   } catch (error) {
-    res.status(400).json({ message: error.message, success: false });
+    return res.status(400).json({ message: error.message, success: false });
   }
 });
 

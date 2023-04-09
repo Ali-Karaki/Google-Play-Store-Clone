@@ -47,6 +47,18 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
+  const setStorages = (
+    userId: string,
+    authToken: string,
+    isAdmin: string,
+    isAdminMode: string
+  ) => {
+    localStorage.setItem(LOCAL_STORAGE.USER_ID, userId);
+    localStorage.setItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN, authToken);
+    sessionStorage.setItem(LOCAL_STORAGE.IS_ADMIN, isAdmin);
+    sessionStorage.setItem(LOCAL_STORAGE.IS_ADMIN_MODE, isAdminMode);
+  };
+
   const handleLogIn = async (e: any) => {
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -56,11 +68,8 @@ const Login = () => {
       );
       const user = userCredential.user;
       const userToken = await userCredential.user.getIdToken();
-      const userModel = await UserServices.getUser(email);
-      localStorage.setItem(LOCAL_STORAGE.USER_ID, userModel._id);
-      localStorage.setItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN, userToken);
-      sessionStorage.setItem(LOCAL_STORAGE.IS_ADMIN, `${userModel.isAdmin}`);
-      sessionStorage.setItem(LOCAL_STORAGE.IS_ADMIN_MODE, "false");
+      const userModel = (await UserServices.getUser(email)).message;
+      setStorages(userModel._id, userToken, `${userModel.isAdmin}`, "false");
       navigate("/store/games");
     } catch (error) {
       console.error(error);
@@ -76,8 +85,8 @@ const Login = () => {
       );
       const user = userCredential.user;
       const userToken = await userCredential.user.getIdToken();
-      localStorage.setItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN, userToken);
-      await createUser();
+      setStorages("", userToken, "false", "false");
+      await createUser(username, email, rememberMe);
       navigate("/store/games");
     } catch (error) {
       console.error(error);
@@ -104,8 +113,21 @@ const Login = () => {
       if (credential !== null && typeof credential !== "undefined") {
         const idTokenResponse = await credential._getIdTokenResponse(auth);
         const token = idTokenResponse.idToken;
-        localStorage.setItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN, token);
-        sessionStorage.setItem(LOCAL_STORAGE.IS_ADMIN_MODE, "false");
+
+        const googleEmail: string = userCredential.user.email!;
+        const googleName: string = userCredential.user.displayName!;
+
+        const userResp = await UserServices.getUser(googleEmail);
+        const mongoUser = userResp.message;
+        const userExists = userResp.success;
+
+        if (userExists) {
+          setStorages(mongoUser._id, token, `${mongoUser.isAdmin}`, "false");
+        } else {
+          setStorages("", token, "false", "false");
+          await createUser(googleName, googleEmail, false);
+        }
+
         navigate("/store/games");
       }
     } catch (error) {
@@ -113,9 +135,13 @@ const Login = () => {
     }
   };
 
-  const createUser = async () => {
-    const user = await UserServices.createUser(username, email, rememberMe);
-    localStorage.setItem(LOCAL_STORAGE.USER_ID, user._id);
+  const createUser = async (
+    name: string,
+    mail: string,
+    rememberme: boolean
+  ) => {
+    const user = await UserServices.createUser(name, mail, rememberme);
+    localStorage.setItem(LOCAL_STORAGE.USER_ID, user.message._id);
   };
 
   return (

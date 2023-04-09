@@ -45,6 +45,7 @@ const NavBar = () => {
     localStorage.removeItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN);
     await auth.signOut();
     localStorage.clear();
+    sessionStorage.clear();
     navigate("/login");
   };
 

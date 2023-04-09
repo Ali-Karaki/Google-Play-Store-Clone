@@ -12,15 +12,15 @@ router.get("/getMovies", async (req, res) => {
     !authenticated.userData
   ) {
     const { message } = authenticated;
-    res.status(400).json({ message: message, success: false });
+    return res.status(400).json({ message: message, success: false });
     return;
   }
 
   try {
     const movies = await Movie.find();
-    res.status(200).json({ message: movies, success: true });
+    return res.status(200).json({ message: movies, success: true });
   } catch (error) {
-    res.status(404).json({ message: "No movies found", success: false });
+    return res.status(404).json({ message: "No movies found", success: false });
   }
 });
 
@@ -32,14 +32,14 @@ router.post("/createMovie", async (req, res) => {
     !authenticated.userData
   ) {
     const { message } = authenticated;
-    res.status(400).json({ message: message, success: false });
+    return res.status(400).json({ message: message, success: false });
     return;
   }
   try {
     const movie = await Movie.create(req.body);
-    res.status(200).json({ message: movie, success: true });
+    return res.status(200).json({ message: movie, success: true });
   } catch (error) {
-    res.status(400).json({ message: error.message, success: false });
+    return res.status(400).json({ message: error.message, success: false });
   }
 });
 
@@ -51,7 +51,7 @@ router.post("/deleteMovie", async (req, res) => {
     !authenticated.userData
   ) {
     const { message } = authenticated;
-    res.status(400).json({ message: message, success: false });
+    return res.status(400).json({ message: message, success: false });
     return;
   }
 
@@ -69,7 +69,7 @@ router.post("/deleteMovie", async (req, res) => {
       .status(200)
       .json({ message: "Movie deleted successfully", success: true });
   } catch (error) {
-    res.status(400).json({ message: error.message, success: false });
+    return res.status(400).json({ message: error.message, success: false });
   }
 });
 
