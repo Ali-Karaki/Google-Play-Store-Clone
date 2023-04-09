@@ -7,6 +7,7 @@ import CarouselComponent, {
   CarouselData,
 } from "../../components/carousel/Carousel";
 import { useLocation } from "react-router-dom";
+import React from "react";
 
 const Applications = () => {
   const location = useLocation();
@@ -68,18 +69,20 @@ const Applications = () => {
 
   return (
     <Box sx={styles.container}>
-      {sections.map((section: string) =>
-        getFilteredApps(section).length > 0 ? (
-          <Box key={section} sx={styles.row}>
-            <Typography textTransform="none" sx={styles.sectionTitle}>
-              {section}
-            </Typography>
-            <CarouselComponent data={getFilteredApps(section)} />
-          </Box>
-        ) : (
-          <></>
-        )
-      )}
+      {sections.map((section: string) => (
+        <React.Fragment key={section}>
+          {getFilteredApps(section).length > 0 ? (
+            <Box sx={styles.row}>
+              <Typography textTransform="none" sx={styles.sectionTitle}>
+                {section}
+              </Typography>
+              <CarouselComponent data={getFilteredApps(section)} />
+            </Box>
+          ) : (
+            <></>
+          )}
+        </React.Fragment>
+      ))}
     </Box>
   );
 };

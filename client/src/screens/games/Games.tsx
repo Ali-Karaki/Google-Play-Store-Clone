@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AppModel } from "../../models/apps.model";
 import AppsServices from "../../services/apps.service";
 import Typography from "@mui/material/Typography";
@@ -68,18 +68,20 @@ const Games = () => {
 
   return (
     <Box sx={styles.container}>
-      {sections.map((section: string) =>
-        getFilteredGames(section).length > 0 ? (
-          <Box key={section} sx={styles.row}>
-            <Typography textTransform="none" sx={styles.sectionTitle}>
-              {section}
-            </Typography>
-            <CarouselComponent data={getFilteredGames(section)} />
-          </Box>
-        ) : (
-          <></>
-        )
-      )}
+      {sections.map((section: string) => (
+        <React.Fragment key={section}>
+          {getFilteredGames(section).length > 0 ? (
+            <Box sx={styles.row}>
+              <Typography textTransform="none" sx={styles.sectionTitle}>
+                {section}
+              </Typography>
+              <CarouselComponent data={getFilteredGames(section)} />
+            </Box>
+          ) : (
+            <></>
+          )}
+        </React.Fragment>
+      ))}
     </Box>
   );
 };

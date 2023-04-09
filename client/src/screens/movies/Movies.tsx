@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import MoviesServices from "../../services/movies.service";
 import Typography from "@mui/material/Typography";
 import CarouselComponent, {
@@ -66,18 +66,20 @@ const Movies = () => {
 
   return (
     <Box sx={styles.container}>
-      {sections.map((section: string) =>
-        getFilteredMovies(section).length > 0 ? (
-          <Box key={section} sx={styles.row}>
-            <Typography textTransform="none" sx={styles.sectionTitle}>
-              {section}
-            </Typography>
-            <CarouselComponent data={getFilteredMovies(section)} />
-          </Box>
-        ) : (
-          <></>
-        )
-      )}
+      {sections.map((section: string) => (
+        <React.Fragment key={section}>
+          {getFilteredMovies(section).length > 0 ? (
+            <Box sx={styles.row}>
+              <Typography textTransform="none" sx={styles.sectionTitle}>
+                {section}
+              </Typography>
+              <CarouselComponent data={getFilteredMovies(section)} />
+            </Box>
+          ) : (
+            <></>
+          )}
+        </React.Fragment>
+      ))}
     </Box>
   );
 };
