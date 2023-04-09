@@ -6,8 +6,11 @@ import Typography from "@mui/material/Typography";
 import CarouselComponent, {
   CarouselData,
 } from "../../components/carousel/Carousel";
+import { useLocation } from "react-router-dom";
 
 const Applications = () => {
+  const location = useLocation();
+
   const [apps, setApps] = useState<AppModel[]>([]);
 
   const getApps = async () => {
@@ -15,8 +18,26 @@ const Applications = () => {
     setApps(resApps);
   };
 
-  const getCarouselData = (data: AppModel[]): CarouselData[] => {
-    return data.map((item: AppModel) => ({
+  const getFilteredApps = (section: string): CarouselData[] => {
+    let filteredApps = apps;
+    if (window.location.href.includes("?")) {
+      const filter = window.location.href.split("?")[1];
+      const [filterKey, filterValue] = filter.split("=");
+      filteredApps = filteredApps.filter((app: any) => {
+        return app[filterKey]
+          .map((dev: string) => dev.toLowerCase())
+          .includes(filterValue.toLowerCase());
+      });
+    }
+    if (section !== "") {
+      filteredApps = filteredApps.filter((app: any) => {
+        return app["tags"]
+          .map((dev: string) => dev.toLowerCase())
+          .includes(section.toLowerCase());
+      });
+    }
+
+    return filteredApps.map((item: AppModel) => ({
       id: item._id!,
       name: item.name,
       logo: item.logo,
@@ -28,56 +49,37 @@ const Applications = () => {
     getApps();
   }, []);
 
+  useEffect(() => {
+    getFilteredApps("");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.search]);
+
+  const sections = [
+    "Business",
+    "Communication",
+    "Finance",
+    "Health",
+    "Travel",
+    "Action",
+    "Arcade",
+    "Sports",
+    "Simulation",
+  ];
+
   return (
     <Box sx={styles.container}>
-      <Box sx={styles.row}>
-        <Typography textTransform="none" sx={styles.sectionTitle}>
-          Top charts
-        </Typography>
-        <CarouselComponent
-          data={[
-            ...getCarouselData(apps),
-            ...getCarouselData(apps),
-            ...getCarouselData(apps),
-          ]}
-        />
-      </Box>
-      <Box sx={styles.row}>
-        <Typography textTransform="none" sx={styles.sectionTitle}>
-          Editor's Choice
-        </Typography>
-        <CarouselComponent data={getCarouselData(apps)} />
-      </Box>
-      <Box sx={styles.row}>
-        <Typography textTransform="none" sx={styles.sectionTitle}>
-          Popular apps
-        </Typography>
-        <CarouselComponent data={getCarouselData(apps)} />
-      </Box>
-      <Box sx={styles.row}>
-        <Typography textTransform="none" sx={styles.sectionTitle}>
-          Health & Lifestyle
-        </Typography>
-        <CarouselComponent data={getCarouselData(apps)} />
-      </Box>
-      <Box sx={styles.row}>
-        <Typography textTransform="none" sx={styles.sectionTitle}>
-          Education & Language
-        </Typography>
-        <CarouselComponent data={getCarouselData(apps)} />
-      </Box>
-      <Box sx={styles.row}>
-        <Typography textTransform="none" sx={styles.sectionTitle}>
-          Social Media
-        </Typography>
-        <CarouselComponent data={getCarouselData(apps)} />
-      </Box>
-      <Box sx={styles.row}>
-        <Typography textTransform="none" sx={styles.sectionTitle}>
-          Travel
-        </Typography>
-        <CarouselComponent data={getCarouselData(apps)} />
-      </Box>
+      {sections.map((section: string) =>
+        getFilteredApps(section).length > 0 ? (
+          <Box key={section} sx={styles.row}>
+            <Typography textTransform="none" sx={styles.sectionTitle}>
+              {section}
+            </Typography>
+            <CarouselComponent data={getFilteredApps(section)} />
+          </Box>
+        ) : (
+          <></>
+        )
+      )}
     </Box>
   );
 };

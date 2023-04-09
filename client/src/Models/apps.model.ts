@@ -3,7 +3,7 @@ export interface AppModel {
   name: string;
   company: string;
   logo: string;
-  devices: Array<"Phone" | "Tablet" | "TV">;
+  devices: Array<"Windows" | "Phone" | "Tablet" | "TV">;
   type: "App" | "Game";
   version: string;
   releasedOn: Date;

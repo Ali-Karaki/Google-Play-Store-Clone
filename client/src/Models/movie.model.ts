@@ -1,4 +1,4 @@
-export interface Movie {
+export interface MovieModel {
   _id?: string;
   name: string;
   company: string;
@@ -20,4 +20,9 @@ export interface Movie {
     | "Science Fiction"
   >;
   isEditorChoice: boolean;
+}
+
+export interface MovieResponse {
+  message: MovieModel;
+  success: boolean;
 }

@@ -65,13 +65,15 @@ const Item = ({ chunk, onHover, offHover }: ItemProps) => {
         <Box sx={styles.item} key={item.id} onClick={() => clickItem(item)}>
           <img
             style={styles.img}
-            src="https://drive.google.com/uc?id=1CDaAsMzMmKeC3EcbAeh3MT-eRz_K63O5"
+            src={item.logo}
             alt={item.name}
           />
-          <Typography style={styles.name}>{item.name}</Typography>
-          <Box sx={styles.container}>
-            <Typography>{item.stars}</Typography>
-            <StarRateIcon />
+          <Box style={styles.appDetails}>
+            <Typography style={styles.name}>{item.name}</Typography>
+            <Box sx={styles.container}>
+              <Typography style={styles.name}>{item.stars}</Typography>
+              <StarRateIcon style={styles.stars} />
+            </Box>
           </Box>
         </Box>
       ))}
@@ -84,16 +86,25 @@ const styles = {
     display: "flex",
   },
   img: {
-    width: "200px",
-    height: "180px",
+    width: "160px",
+    height: "160px",
+    borderRadius: "20%",
   },
   item: {
     margin: " 0px 20px",
   },
   name: {
-    fontSize: "12px",
+    fontSize: "13px",
     fontWeight: "600",
     color: "#5F6368",
+  },
+  stars: {
+    fontSize: "15px",
+    fontWeight: "600",
+    color: "#5F6368",
+  },
+  appDetails: {
+    marginLeft: "10px",
   },
 };
 

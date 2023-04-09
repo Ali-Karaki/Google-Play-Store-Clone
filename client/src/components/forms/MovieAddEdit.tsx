@@ -13,7 +13,7 @@ import {
   MenuItem,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { Movie } from "../../models/movie.model";
+import { MovieModel } from "../../models/movie.model";
 
 const MovieModelSchema = Yup.object().shape({
   name: Yup.string().required("Required"),
@@ -35,7 +35,7 @@ const MovieAddEdit = ({ editingMovie }: any) => {
 
   const navigate = useNavigate();
 
-  const initialValues: Movie = {
+  const initialValues: MovieModel = {
     name: editingMovie?.name ?? "",
     company: editingMovie?.company ?? "",
     logo: editingMovie?.logo ?? "",
@@ -55,7 +55,7 @@ const MovieAddEdit = ({ editingMovie }: any) => {
       <Formik
         initialValues={initialValues}
         validationSchema={MovieModelSchema}
-        onSubmit={async (values: Movie) => {}}
+        onSubmit={async (values: MovieModel) => {}}
       >
         {({ values, handleChange, errors, touched }) => (
           <Form>

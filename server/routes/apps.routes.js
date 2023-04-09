@@ -13,11 +13,10 @@ router.get("/getApps", async (req, res) => {
   ) {
     const { message } = authenticated;
     return res.status(400).json({ message: message, success: false });
-    return;
   }
 
   try {
-    const filter = { type: "app" };
+    const filter = { type: "App" };
     const apps = await Apps.find(filter);
     return res.status(200).json({ message: apps, success: true });
   } catch (error) {
@@ -34,11 +33,10 @@ router.get("/getGames", async (req, res) => {
   ) {
     const { message } = authenticated;
     return res.status(400).json({ message: message, success: false });
-    return;
   }
 
   try {
-    const filter = { type: "game" };
+    const filter = { type: "Game" };
     const games = await Apps.find(filter);
     return res.status(200).json({ message: games, success: true });
   } catch (error) {
