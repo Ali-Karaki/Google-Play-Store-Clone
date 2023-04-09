@@ -22,6 +22,7 @@ admin.initializeApp(firebaseConfig);
 try {
   mongoose.connect(process.env.mongoURI, {
     useNewUrlParser: true,
+    dbName: "google-play"
   });
 } catch (err) {
   console.error(err.message);

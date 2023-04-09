@@ -1,15 +1,23 @@
 export interface Movie {
-  _id: string;
+  _id?: string;
   name: string;
   company: string;
   logo: string;
   releasedOn: Date;
   duration: number;
   description: string;
-  ageRestrictions: string;
+  ageRestrictions: "G" | "PG" | "PG-13" | "R" | "NC-17";
   price: number;
   stars: number;
   downloads: number;
-  tags: string[];
+  tags: Array<
+    | "Action"
+    | "Comedy"
+    | "Drama"
+    | "Thriller"
+    | "Horror"
+    | "Romance"
+    | "Science Fiction"
+  >;
   isEditorChoice: boolean;
 }

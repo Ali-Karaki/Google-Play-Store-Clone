@@ -6,11 +6,21 @@ import { environment } from "../config/environment";
 
 const auth = getAuth();
 
+const loginPage = `${environment.devHost}/login`;
+
 const refreshToken = async () => {
   const token = await auth.currentUser?.getIdToken(true);
   if (token) {
     localStorage.setItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN, token);
   }
+};
+
+const signOut = async () => {
+  localStorage.removeItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN);
+  await auth.signOut();
+  localStorage.clear();
+  sessionStorage.clear();
+  window.location.href = loginPage;
 };
 
 export const setRefreshTimer = (time: any) => {
@@ -26,19 +36,14 @@ export const checkTokenExpiration = async () => {
   const expirationTime = decodedToken.exp * 1000;
   const now = Date.now();
   const timeLeft = expirationTime - now;
-  const rememberMe: boolean = (await UserServices.getUser()).rememberMe;
-  const loginPage = `${environment.devHost}/login`;
+  const rememberMe: boolean = (await UserServices.getUser()).message.rememberMe;
 
   // if token expired
   if (expirationTime < now) {
     if (rememberMe) {
-      refreshToken();
+      await refreshToken();
     } else {
-      // redirect to login
-      localStorage.removeItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN);
-      if (window.location.pathname !== "/login") {
-        window.location.replace(loginPage);
-      }
+      signOut();
     }
     // else set timer to timeLeft so refresh
   } else {

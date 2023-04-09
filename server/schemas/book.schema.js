@@ -17,12 +17,6 @@ const BookSchema = new Schema({
     type: String,
     required: true,
   },
-  pictures: [
-    {
-      type: String,
-      required: true,
-    },
-  ],
   releasedOn: {
     type: Date,
     required: true,
@@ -65,15 +59,21 @@ const BookSchema = new Schema({
   },
   pages: {
     type: Number,
-    required: false,
+    required: function () {
+      return this.type === "Ebook";
+    },
   },
   duration: {
     type: String,
-    required: false,
+    required: function () {
+      return this.type === "Audiobook";
+    },
   },
   narratedBy: {
     type: String,
-    required: false,
+    required: function () {
+      return this.type === "Audiobook";
+    },
   },
 });
 

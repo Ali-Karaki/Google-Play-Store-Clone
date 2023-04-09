@@ -17,10 +17,6 @@ const AppsSchema = new Schema({
     type: String,
     required: true,
   },
-  pictures: {
-    type: [String],
-    required: true,
-  },
   devices: {
     type: [String],
     required: true,
@@ -76,30 +72,6 @@ const AppsSchema = new Schema({
   isEditorChoice: {
     type: Boolean,
     required: true,
-  },
-  dataSafety: {
-    canDeleteData: {
-      type: Boolean,
-      required: true,
-    },
-    encryptsDataInTransit: {
-      type: Boolean,
-      required: true,
-    },
-    collectsData: {
-      type: Boolean,
-      required: true,
-    },
-    sharesDataWith: {
-      isSharing: {
-        type: Boolean,
-        required: true,
-      },
-      thirdParties: {
-        type: [String],
-        required: true,
-      },
-    },
   },
 });
 

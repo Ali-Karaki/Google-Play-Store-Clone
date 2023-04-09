@@ -20,7 +20,8 @@ const FilteringNavBar = () => {
   const navigate = useNavigate();
 
   const GAMES = [];
-
+  const MOVIES = [];
+  const BOOKS = [];
   const APPS: FilterNavModel[] = [
     {
       key: "phone",
@@ -44,10 +45,6 @@ const FilteringNavBar = () => {
       filteredBy: "device",
     },
   ];
-
-  const MOVIES = [];
-
-  const BOOKS = [];
 
   const changeRoute = (btn: FilterNavModel) => {
     navigate(`${btn.href}?${btn.filteredBy}=${btn.key}`);

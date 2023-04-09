@@ -12,4 +12,10 @@ export interface UserModel {
   email: string;
   rememberMe: boolean;
   wishlist: WishlistItem[];
+  isAdmin: boolean;
+}
+
+export interface UserResponse {
+  message: UserModel;
+  success: boolean
 }

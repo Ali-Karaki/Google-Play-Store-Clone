@@ -8,7 +8,6 @@ import { checkTokenExpiration } from "./services/auth.service";
 
 function App() {
   checkTokenExpiration();
-
   return (
     <>
       <BrowserRouter>
@@ -22,7 +21,7 @@ function App() {
                   <>
                     <AuthCheck>
                       <NavBar />
-                      <FilteringNavBar />
+                      {!route.path.includes("admin") && <FilteringNavBar />}
                       <route.component />
                     </AuthCheck>
                   </>
