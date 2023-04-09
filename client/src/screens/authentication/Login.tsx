@@ -59,8 +59,8 @@ const Login = () => {
       const userModel = await UserServices.getUser(email);
       localStorage.setItem(LOCAL_STORAGE.USER_ID, userModel._id);
       localStorage.setItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN, userToken);
-      localStorage.setItem(LOCAL_STORAGE.IS_ADMIN, `${userModel.isAdmin}`);
-      localStorage.setItem(LOCAL_STORAGE.IS_ADMIN_MODE, "false");
+      sessionStorage.setItem(LOCAL_STORAGE.IS_ADMIN, `${userModel.isAdmin}`);
+      sessionStorage.setItem(LOCAL_STORAGE.IS_ADMIN_MODE, "false");
       navigate("/store/games");
     } catch (error) {
       console.error(error);
@@ -105,7 +105,7 @@ const Login = () => {
         const idTokenResponse = await credential._getIdTokenResponse(auth);
         const token = idTokenResponse.idToken;
         localStorage.setItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN, token);
-        localStorage.setItem(LOCAL_STORAGE.IS_ADMIN_MODE, "false");
+        sessionStorage.setItem(LOCAL_STORAGE.IS_ADMIN_MODE, "false");
         navigate("/store/games");
       }
     } catch (error) {

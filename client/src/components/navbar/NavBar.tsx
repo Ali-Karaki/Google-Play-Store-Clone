@@ -26,7 +26,7 @@ const NavBar = () => {
     let path = `/store/${route.toLowerCase()}`;
 
     const isAdminMode =
-      localStorage.getItem(LOCAL_STORAGE.IS_ADMIN_MODE) === "true";
+      sessionStorage.getItem(LOCAL_STORAGE.IS_ADMIN_MODE) === "true";
 
     path = isAdminMode ? "/admin" + path : path;
     navigate(path);
@@ -49,17 +49,17 @@ const NavBar = () => {
   };
 
   const adminMode = () => {
-    const isAdmin = localStorage.getItem(LOCAL_STORAGE.IS_ADMIN);
+    const isAdmin = sessionStorage.getItem(LOCAL_STORAGE.IS_ADMIN);
     if (isAdmin) {
       const isAdminMode: boolean =
-        localStorage.getItem(LOCAL_STORAGE.IS_ADMIN_MODE) === "true";
+        sessionStorage.getItem(LOCAL_STORAGE.IS_ADMIN_MODE) === "true";
 
       if (isAdminMode) {
         navigate(`/store/apps`);
       } else {
         navigate(`/admin/store/apps`);
       }
-      localStorage.setItem(
+      sessionStorage.setItem(
         LOCAL_STORAGE.IS_ADMIN_MODE,
         (!isAdminMode).toString()
       );
@@ -98,14 +98,14 @@ const NavBar = () => {
       .filter(
         (item) =>
           !(
-            localStorage.getItem(LOCAL_STORAGE.IS_ADMIN) === "false" &&
+            sessionStorage.getItem(LOCAL_STORAGE.IS_ADMIN) === "false" &&
             item.isAdmin
           )
       )
       .filter(
         (item) =>
           !(
-            localStorage.getItem(LOCAL_STORAGE.IS_ADMIN_MODE) === "false" &&
+            sessionStorage.getItem(LOCAL_STORAGE.IS_ADMIN_MODE) === "false" &&
             item.isAdminMode
           )
       );
