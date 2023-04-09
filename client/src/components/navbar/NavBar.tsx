@@ -222,6 +222,7 @@ const styles = {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
+    boxShadow: "rgb(38, 57, 77) 0px 20px 13px -20px"
   },
   iconsGroup: {
     display: "flex",
