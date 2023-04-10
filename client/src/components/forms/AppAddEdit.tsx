@@ -142,7 +142,7 @@ const AppAddEdit = ({ editingApp }: any) => {
     <Box sx={{ paddingTop: "5%" }}>
       <Snackbar
         open={successSnackbarOpen}
-        autoHideDuration={3000}
+        autoHideDuration={5000}
         onClose={handleSuccessSnackbarClose}
       >
         <Alert onClose={() => handleSuccessSnackbarClose} severity="success">
@@ -153,7 +153,7 @@ const AppAddEdit = ({ editingApp }: any) => {
       </Snackbar>
       <Snackbar
         open={errorSnackbarOpen}
-        autoHideDuration={3000}
+        autoHideDuration={5000}
         onClose={handleErrorSnackbarClose}
       >
         <Alert onClose={() => handleErrorSnackbarClose} severity="error">

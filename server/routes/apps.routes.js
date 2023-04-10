@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { Apps } from "../schemas/apps.schema.js";
-import { authenticate } from "../authenticateToken.js";
+import { authenticate } from "../utilities.js";
 
 const router = Router();
 

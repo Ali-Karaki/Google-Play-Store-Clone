@@ -30,3 +30,4 @@ export async function authenticate(req) {
     return response;
   }
 }
+
