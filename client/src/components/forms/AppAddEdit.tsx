@@ -93,30 +93,73 @@ const AppAddEdit = ({ editingApp }: any) => {
   };
 
   const handleFileUpload = async (fileName: string) => {
-    const storageRef = ref(storage, fileName);
-    await uploadBytes(storageRef, file as any);
-    const url = await getDownloadURL(storageRef);
-    return url;
+    if (file) {
+      const storageRef = ref(storage, fileName);
+      await uploadBytes(storageRef, file as any);
+      const url = await getDownloadURL(storageRef);
+      return url;
+    } else {
+      return imageUrl;
+    }
+  };
+
+  const handleAppCreate = async (values: any) => {
+    const imgName = `${values.name}${values.company}`
+      .trim()
+      .replace(/\s+/g, "-");
+    const imgUrl = await handleFileUpload(imgName);
+    const res = await AppsServices.createApp({
+      ...values,
+      logo: imgUrl,
+      stars: 0,
+      downloads: 0,
+    } as any);
+    if (res.success) {
+      setSuccessSnackbarOpen(true);
+    } else {
+      setErrorSnackbarOpen(true);
+    }
+  };
+
+  const handleAppEdit = async (values: any) => {
+    const imgName = `${values.name}${values.company}`
+      .trim()
+      .replace(/\s+/g, "-");
+    const imgUrl = await handleFileUpload(imgName);
+    const res = await AppsServices.editApp({
+      ...values,
+      _id: editingApp._id,
+      logo: imgUrl,
+    } as any);
+    if (res.success) {
+      setSuccessSnackbarOpen(true);
+    } else {
+      setErrorSnackbarOpen(true);
+    }
   };
 
   return (
     <Box sx={{ paddingTop: "5%" }}>
       <Snackbar
         open={successSnackbarOpen}
-        autoHideDuration={6000}
+        autoHideDuration={3000}
         onClose={handleSuccessSnackbarClose}
       >
         <Alert onClose={() => handleSuccessSnackbarClose} severity="success">
-          App successfully created!
+          {isEditing
+            ? "App successfully updated!"
+            : "App successfully created!"}
         </Alert>
       </Snackbar>
       <Snackbar
         open={errorSnackbarOpen}
-        autoHideDuration={6000}
+        autoHideDuration={3000}
         onClose={handleErrorSnackbarClose}
       >
         <Alert onClose={() => handleErrorSnackbarClose} severity="error">
-          An error occurred while creating the app!
+          {isEditing
+            ? "An error occurred while updating the app!"
+            : "An error occurred while creating the app!"}
         </Alert>
       </Snackbar>
       <Formik
@@ -124,23 +167,9 @@ const AppAddEdit = ({ editingApp }: any) => {
         validationSchema={AppModelSchema}
         onSubmit={async (values) => {
           if (isEditing) {
-            // edit service
+            handleAppEdit(values);
           } else {
-            const imgName = `${values.name}${values.company}`
-              .trim()
-              .replace(/\s+/g, "-");
-            const imgUrl = await handleFileUpload(imgName);
-            const res = await AppsServices.createApp({
-              ...values,
-              logo: imgUrl,
-              stars: 0,
-              downloads: 0,
-            } as any);
-            if (res.success) {
-              setSuccessSnackbarOpen(true);
-            } else {
-              setErrorSnackbarOpen(true);
-            }
+            handleAppCreate(values);
           }
         }}
       >

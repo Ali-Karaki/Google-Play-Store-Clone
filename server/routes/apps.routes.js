@@ -63,6 +63,30 @@ router.post("/createApp", async (req, res) => {
   }
 });
 
+router.put("/editApp", async (req, res) => {
+  const authenticated = await authenticate(req);
+  if (
+    !authenticated ||
+    authenticated.status !== 200 ||
+    !authenticated.userData
+  ) {
+    const { message } = authenticated;
+    return res.status(400).json({ message: message, success: false });
+  }
+  try {
+    const app = await Apps.findByIdAndUpdate(req.body._id, req.body, {
+      new: true,
+    });
+    if (!app) {
+      return res.status(404).send({ message: "No app found", success: false });
+    }
+    return res.status(200).send({ message: "App updated", success: true });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send({ message: error, success: false });
+  }
+});
+
 router.post("/deleteApp", async (req, res) => {
   const authenticated = await authenticate(req);
   if (
