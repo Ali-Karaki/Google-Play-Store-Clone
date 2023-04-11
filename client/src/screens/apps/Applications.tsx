@@ -4,10 +4,10 @@ import { AppModel } from "../../models/apps.model";
 import AppsServices from "../../services/apps.service";
 import Typography from "@mui/material/Typography";
 import CarouselComponent, {
-  CarouselData,
 } from "../../components/carousel/Carousel";
 import { useLocation } from "react-router-dom";
 import React from "react";
+import { CarouselData } from "../../components/carousel/Carousel.types";
 
 const Applications = () => {
   const location = useLocation();

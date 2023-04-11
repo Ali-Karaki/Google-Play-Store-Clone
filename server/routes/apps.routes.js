@@ -44,6 +44,25 @@ router.get("/getGames", async (req, res) => {
   }
 });
 
+router.post("/getApp", async (req, res) => {
+  const authenticated = await authenticate(req);
+  if (
+    !authenticated ||
+    authenticated.status !== 200 ||
+    !authenticated.userData
+  ) {
+    const { message } = authenticated;
+    return res.status(400).json({ message: message, success: false });
+  }
+  try {
+    const { appId } = req.body;
+    const app = await Apps.findById(appId);
+    return res.status(200).json({ message: app, success: true });
+  } catch (error) {
+    return res.status(404).json({ message: "No app found", success: false });
+  }
+});
+
 router.post("/createApp", async (req, res) => {
   const authenticated = await authenticate(req);
   if (
@@ -53,7 +72,6 @@ router.post("/createApp", async (req, res) => {
   ) {
     const { message } = authenticated;
     return res.status(400).json({ message: message, success: false });
-    return;
   }
   try {
     const app = await Apps.create(req.body);

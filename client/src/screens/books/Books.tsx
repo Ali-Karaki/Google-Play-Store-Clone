@@ -3,10 +3,10 @@ import React, { useEffect, useState } from "react";
 import BooksServices from "../../services/books.service";
 import Typography from "@mui/material/Typography";
 import CarouselComponent, {
-  CarouselData,
 } from "../../components/carousel/Carousel";
 import { useLocation } from "react-router-dom";
 import { BookModel } from "../../models/book.model";
+import { CarouselData } from "../../components/carousel/Carousel.types";
 
 const Books = () => {
   const location = useLocation();

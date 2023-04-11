@@ -3,10 +3,10 @@ import React, { useEffect, useState } from "react";
 import MoviesServices from "../../services/movies.service";
 import Typography from "@mui/material/Typography";
 import CarouselComponent, {
-  CarouselData,
 } from "../../components/carousel/Carousel";
 import { useLocation } from "react-router-dom";
 import { MovieModel } from "../../models/movie.model";
+import { CarouselData } from "../../components/carousel/Carousel.types";
 
 const Movies = () => {
   const location = useLocation();

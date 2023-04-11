@@ -24,6 +24,25 @@ router.get("/getBooks", async (req, res) => {
   }
 });
 
+router.post("/getBook", async (req, res) => {
+  const authenticated = await authenticate(req);
+  if (
+    !authenticated ||
+    authenticated.status !== 200 ||
+    !authenticated.userData
+  ) {
+    const { message } = authenticated;
+    return res.status(400).json({ message: message, success: false });
+  }
+  try {
+    const { bookId } = req.body;
+    const book = await Book.findById(bookId);
+    return res.status(200).json({ message: book, success: true });
+  } catch (error) {
+    return res.status(404).json({ message: "No book found", success: false });
+  }
+});
+
 router.post("/createBook", async (req, res) => {
   const authenticated = await authenticate(req);
   if (

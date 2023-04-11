@@ -28,6 +28,20 @@ async function createMovie(movie: MovieModel): Promise<ResponseI> {
   return res.data;
 }
 
+async function getMovie(movieId: string): Promise<MovieModel[]> {
+  const authToken = localStorage.getItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN);
+  const headers = { Authorization: `Bearer ${authToken}` };
+
+  const res = await axios.post(
+    `${environment.devAPI}/movies/getMovie`,
+    { movieId },
+    {
+      headers: headers,
+    }
+  );
+  return res.data.message;
+}
+
 async function editMovie(movie: MovieModel): Promise<ResponseI> {
   const authToken = localStorage.getItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN);
   const headers = { Authorization: `Bearer ${authToken}` };
@@ -50,5 +64,11 @@ async function deleteMovie(movieId: string): Promise<ResponseI> {
   );
   return res.data.message;
 }
-const MoviesServices = { getMovies, createMovie, editMovie, deleteMovie };
+const MoviesServices = {
+  getMovies,
+  getMovie,
+  createMovie,
+  editMovie,
+  deleteMovie,
+};
 export default MoviesServices;

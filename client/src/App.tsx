@@ -21,7 +21,8 @@ function App() {
                   <>
                     <AuthCheck>
                       <NavBar />
-                      {!route.path.includes("admin") && <FilteringNavBar />}
+                      {!route.path.includes("admin") &&
+                        !route.path.includes("view") && <FilteringNavBar />}
                       <route.component />
                     </AuthCheck>
                   </>

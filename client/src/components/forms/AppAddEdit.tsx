@@ -22,6 +22,9 @@ import AppsServices from "../../services/apps.service";
 import { getDownloadURL, ref, uploadBytes } from "@firebase/storage";
 import { storage } from "../../config/firebase";
 
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+
 const AppModelSchema = Yup.object().shape({
   name: Yup.string().required("Required"),
   company: Yup.string().required("Required"),
@@ -46,6 +49,8 @@ const AppAddEdit = ({ editingApp }: any) => {
   const [imageUrl, setImageUrl] = React.useState(
     isEditing ? editingApp.logo : ""
   );
+
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const [successSnackbarOpen, setSuccessSnackbarOpen] = React.useState(false);
   const [errorSnackbarOpen, setErrorSnackbarOpen] = React.useState(false);
@@ -104,6 +109,7 @@ const AppAddEdit = ({ editingApp }: any) => {
   };
 
   const handleAppCreate = async (values: any) => {
+    setIsLoading(true);
     const imgName = `${values.name}${values.company}`
       .trim()
       .replace(/\s+/g, "-");
@@ -114,6 +120,7 @@ const AppAddEdit = ({ editingApp }: any) => {
       stars: 0,
       downloads: 0,
     } as any);
+    setIsLoading(false);
     if (res.success) {
       setSuccessSnackbarOpen(true);
     } else {
@@ -122,6 +129,7 @@ const AppAddEdit = ({ editingApp }: any) => {
   };
 
   const handleAppEdit = async (values: any) => {
+    setIsLoading(true);
     const imgName = `${values.name}${values.company}`
       .trim()
       .replace(/\s+/g, "-");
@@ -131,6 +139,7 @@ const AppAddEdit = ({ editingApp }: any) => {
       _id: editingApp._id,
       logo: imgUrl,
     } as any);
+    setIsLoading(false);
     if (res.success) {
       setSuccessSnackbarOpen(true);
     } else {
@@ -140,6 +149,13 @@ const AppAddEdit = ({ editingApp }: any) => {
 
   return (
     <Box sx={{ paddingTop: "5%" }}>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+
       <Snackbar
         open={successSnackbarOpen}
         autoHideDuration={5000}

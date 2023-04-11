@@ -15,6 +15,20 @@ async function getBooks(): Promise<BookModel[]> {
   return res.data.message;
 }
 
+async function getBook(bookId: string): Promise<BookModel[]> {
+  const authToken = localStorage.getItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN);
+  const headers = { Authorization: `Bearer ${authToken}` };
+
+  const res = await axios.post(
+    `${environment.devAPI}/books/getBook`,
+    { bookId },
+    {
+      headers: headers,
+    }
+  );
+  return res.data.message;
+}
+
 async function createBook(book: BookModel): Promise<ResponseI> {
   const authToken = localStorage.getItem(LOCAL_STORAGE.FIREBASE_AUTH_TOKEN);
   const headers = { Authorization: `Bearer ${authToken}` };
@@ -43,5 +57,5 @@ async function deleteBook(bookId: string): Promise<ResponseI> {
   return res.data.message;
 }
 
-const BooksServices = { getBooks, createBook, editBook, deleteBook };
+const BooksServices = { getBooks, getBook, createBook, editBook, deleteBook };
 export default BooksServices;

@@ -22,6 +22,9 @@ import { getDownloadURL, ref, uploadBytes } from "@firebase/storage";
 import { storage } from "../../config/firebase";
 import MoviesServices from "../../services/movies.service";
 
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
+
 const MovieModelSchema = Yup.object().shape({
   name: Yup.string().required("Required"),
   company: Yup.string().required("Required"),
@@ -43,6 +46,8 @@ const MovieAddEdit = ({ editingMovie }: any) => {
   const [imageUrl, setImageUrl] = React.useState(
     isEditing ? editingMovie.logo : ""
   );
+
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const [successSnackbarOpen, setSuccessSnackbarOpen] = React.useState(false);
   const [errorSnackbarOpen, setErrorSnackbarOpen] = React.useState(false);
@@ -98,6 +103,7 @@ const MovieAddEdit = ({ editingMovie }: any) => {
   };
 
   const handleMovieCreate = async (values: any) => {
+    setIsLoading(true);
     const imgName = `${values.name}${values.company}`
       .trim()
       .replace(/\s+/g, "-");
@@ -108,6 +114,7 @@ const MovieAddEdit = ({ editingMovie }: any) => {
       stars: 0,
       downloads: 0,
     } as any);
+    setIsLoading(false);
     if (res.success) {
       setSuccessSnackbarOpen(true);
     } else {
@@ -116,6 +123,7 @@ const MovieAddEdit = ({ editingMovie }: any) => {
   };
 
   const handleMovieEdit = async (values: any) => {
+    setIsLoading(true);
     const imgName = `${values.name}${values.company}`
       .trim()
       .replace(/\s+/g, "-");
@@ -125,6 +133,7 @@ const MovieAddEdit = ({ editingMovie }: any) => {
       _id: editingMovie._id,
       logo: imgUrl,
     } as any);
+    setIsLoading(false);
     if (res.success) {
       setSuccessSnackbarOpen(true);
     } else {
@@ -134,6 +143,12 @@ const MovieAddEdit = ({ editingMovie }: any) => {
 
   return (
     <Box sx={{ paddingTop: "5%" }}>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <Snackbar
         open={successSnackbarOpen}
         autoHideDuration={5000}

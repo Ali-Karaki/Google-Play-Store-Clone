@@ -4,9 +4,9 @@ import { AppModel } from "../../models/apps.model";
 import AppsServices from "../../services/apps.service";
 import Typography from "@mui/material/Typography";
 import CarouselComponent, {
-  CarouselData,
 } from "../../components/carousel/Carousel";
 import { useLocation } from "react-router-dom";
+import { CarouselData } from "../../components/carousel/Carousel.types";
 
 const Games = () => {
   const location = useLocation();

@@ -3,23 +3,8 @@ import Carousel from "react-material-ui-carousel";
 import { Typography } from "@material-ui/core";
 import StarRateIcon from "@mui/icons-material/StarRate";
 import { Box } from "@mui/material";
-
-export interface CarouselData {
-  id: string;
-  name: string;
-  logo: string;
-  stars: number;
-}
-
-export interface CarouselProps {
-  data: CarouselData[];
-}
-
-export interface ItemProps {
-  chunk: CarouselData[];
-  onHover: any;
-  offHover: any;
-}
+import { CarouselProps, CarouselData, ItemProps } from "./Carousel.types";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const CarouselComponent = ({ data }: CarouselProps) => {
   const splitArrayIntoChunks = (array: any[], chunkSize: number): any[][] => {
@@ -58,16 +43,17 @@ const CarouselComponent = ({ data }: CarouselProps) => {
 };
 
 const Item = ({ chunk, onHover, offHover }: ItemProps) => {
-  const clickItem = (item: CarouselData) => {};
+  const navigate = useNavigate();
+  const location = useLocation();
+  const clickItem = (item: CarouselData) => {
+    const curPage = location.pathname.split("/store/")[1];
+    navigate(`/store/${curPage}/view/${item.id}`);
+  };
   return (
     <Box sx={styles.container} onMouseEnter={onHover} onMouseLeave={offHover}>
       {chunk.map((item) => (
         <Box sx={styles.item} key={item.id} onClick={() => clickItem(item)}>
-          <img
-            style={styles.img}
-            src={item.logo}
-            alt={item.name}
-          />
+          <img style={styles.img} src={item.logo} alt={item.name} />
           <Box style={styles.appDetails}>
             <Typography style={styles.name}>{item.name}</Typography>
             <Box sx={styles.container}>
