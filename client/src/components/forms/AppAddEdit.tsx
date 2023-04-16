@@ -1,46 +1,63 @@
-import React from "react";
-import { Formik, Form } from "formik";
-import * as Yup from "yup";
 import {
-  TextField,
-  MenuItem,
+  Alert,
+  Box,
+  Button,
   Checkbox,
   FormControl,
-  InputLabel,
-  Select,
   FormControlLabel,
-  Button,
-  Box,
-  Alert,
+  FormLabel,
+  Input,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
   Snackbar,
+  TextField,
 } from "@mui/material";
+import { Form, Formik } from "formik";
+import React from "react";
+import * as Yup from "yup";
 import AppsServices from "../../services/apps.service";
+
+import { getDownloadURL, ref, uploadBytes } from "@firebase/storage";
+import { storage } from "../../config/firebase";
+
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const AppModelSchema = Yup.object().shape({
   name: Yup.string().required("Required"),
   company: Yup.string().required("Required"),
-  logo: Yup.string().required("Required"),
   devices: Yup.array().min(1, "Select at least one device"),
   type: Yup.string().required("Required"),
   version: Yup.string().required("Required"),
-  releasedOn: Yup.date().required(),
-  updatedOn: Yup.date().required(),
+  releasedOn: Yup.date().required("Required"),
+  updatedOn: Yup.date().required("Required"),
   size: Yup.number().required("Required"),
   description: Yup.string().required("Required"),
   ageRestrictions: Yup.string().required("Required"),
   price: Yup.number().required("Required"),
-  isOffline: Yup.boolean().required(),
+  isOffline: Yup.boolean().required("Required"),
   tags: Yup.array().min(1, "Select at least one tag"),
-  isEditorChoice: Yup.boolean().required(),
+  isEditorChoice: Yup.boolean().required("Required"),
 });
 
 const AppAddEdit = ({ editingApp }: any) => {
   const isEditing = editingApp !== null;
 
+  const [file, setFile] = React.useState();
+  const [imageUrl, setImageUrl] = React.useState(
+    isEditing ? editingApp.logo : ""
+  );
+
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const [successSnackbarOpen, setSuccessSnackbarOpen] = React.useState(false);
+  const [errorSnackbarOpen, setErrorSnackbarOpen] = React.useState(false);
+
   const initialValues = {
     name: editingApp?.name ?? "",
     company: editingApp?.company ?? "",
-    logo: editingApp?.logo ?? "",
     devices: editingApp?.devices ?? [],
     type: editingApp?.type ?? "",
     version: editingApp?.version ?? "",
@@ -54,9 +71,6 @@ const AppAddEdit = ({ editingApp }: any) => {
     tags: editingApp?.tags ?? [],
     isEditorChoice: editingApp?.isEditorChoice ?? false,
   };
-
-  const [successSnackbarOpen, setSuccessSnackbarOpen] = React.useState(false);
-  const [errorSnackbarOpen, setErrorSnackbarOpen] = React.useState(false);
 
   const handleSuccessSnackbarClose = (event: any, reason: string) => {
     if (reason === "clickaway") {
@@ -72,24 +86,96 @@ const AppAddEdit = ({ editingApp }: any) => {
     setErrorSnackbarOpen(false);
   };
 
+  const handleFileChange = (event: any) => {
+    const file = event.target.files[0];
+    setFile(file);
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setImageUrl((e.target as any).result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleFileUpload = async (fileName: string) => {
+    if (file) {
+      const storageRef = ref(storage, fileName);
+      await uploadBytes(storageRef, file as any);
+      const url = await getDownloadURL(storageRef);
+      return url;
+    } else {
+      return imageUrl;
+    }
+  };
+
+  const handleAppCreate = async (values: any) => {
+    setIsLoading(true);
+    const imgName = `${values.name}${values.company}`
+      .trim()
+      .replace(/\s+/g, "-");
+    const imgUrl = await handleFileUpload(imgName);
+    const res = await AppsServices.createApp({
+      ...values,
+      logo: imgUrl,
+      stars: 0,
+      downloads: 0,
+    } as any);
+    setIsLoading(false);
+    if (res.success) {
+      setSuccessSnackbarOpen(true);
+    } else {
+      setErrorSnackbarOpen(true);
+    }
+  };
+
+  const handleAppEdit = async (values: any) => {
+    setIsLoading(true);
+    const imgName = `${values.name}${values.company}`
+      .trim()
+      .replace(/\s+/g, "-");
+    const imgUrl = await handleFileUpload(imgName);
+    const res = await AppsServices.editApp({
+      ...values,
+      _id: editingApp._id,
+      logo: imgUrl,
+    } as any);
+    setIsLoading(false);
+    if (res.success) {
+      setSuccessSnackbarOpen(true);
+    } else {
+      setErrorSnackbarOpen(true);
+    }
+  };
+
   return (
     <Box sx={{ paddingTop: "5%" }}>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+
       <Snackbar
         open={successSnackbarOpen}
-        autoHideDuration={6000}
+        autoHideDuration={5000}
         onClose={handleSuccessSnackbarClose}
       >
         <Alert onClose={() => handleSuccessSnackbarClose} severity="success">
-          App successfully created!
+          {isEditing
+            ? "App successfully updated!"
+            : "App successfully created!"}
         </Alert>
       </Snackbar>
       <Snackbar
         open={errorSnackbarOpen}
-        autoHideDuration={6000}
+        autoHideDuration={5000}
         onClose={handleErrorSnackbarClose}
       >
         <Alert onClose={() => handleErrorSnackbarClose} severity="error">
-          An error occurred while creating the app!
+          {isEditing
+            ? "An error occurred while updating the app!"
+            : "An error occurred while creating the app!"}
         </Alert>
       </Snackbar>
       <Formik
@@ -97,18 +183,9 @@ const AppAddEdit = ({ editingApp }: any) => {
         validationSchema={AppModelSchema}
         onSubmit={async (values) => {
           if (isEditing) {
-            // edit service
+            handleAppEdit(values);
           } else {
-            const res = await AppsServices.createApp({
-              ...values,
-              stars: 0,
-              downloads: 0,
-            } as any);
-            if (res.success) {
-              setSuccessSnackbarOpen(true);
-            } else {
-              setErrorSnackbarOpen(true);
-            }
+            handleAppCreate(values);
           }
         }}
       >
@@ -134,16 +211,26 @@ const AppAddEdit = ({ editingApp }: any) => {
               error={touched.company && !!errors.company}
               helperText={touched.company && errors.company}
             />
-            <TextField
-              sx={{ margin: "13px 0px" }}
-              fullWidth
-              name="logo"
-              label="Logo"
-              value={values.logo}
-              onChange={handleChange}
-              error={touched.logo && !!errors.logo}
-              helperText={touched.logo && errors.logo}
-            />
+
+            <Box sx={{ p: 2 }}>
+              <FormControl fullWidth sx={{ margin: "13px 0px" }}>
+                <FormLabel>Logo</FormLabel>
+                <Input type="file" onChange={handleFileChange} />
+              </FormControl>
+
+              {imageUrl && (
+                <Paper sx={{ p: 2, mt: 2 }}>
+                  <Box sx={{ display: "flex", justifyContent: "center" }}>
+                    <img
+                      src={imageUrl}
+                      alt="Preview"
+                      style={{ maxWidth: "100%" }}
+                    />
+                  </Box>
+                </Paper>
+              )}
+            </Box>
+
             <FormControl fullWidth sx={{ margin: "13px 0px" }}>
               <InputLabel>Devices</InputLabel>
               <Select

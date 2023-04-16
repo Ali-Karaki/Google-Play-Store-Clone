@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { User } from "../schemas/user.schema.js";
 import { Types } from "mongoose";
-import { authenticate } from "../authenticateToken.js";
+import { authenticate } from "../utilities.js";
 
 const router = Router();
 

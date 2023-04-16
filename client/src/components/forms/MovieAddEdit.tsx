@@ -1,25 +1,34 @@
-import React from "react";
-import { Formik, Form } from "formik";
-import * as Yup from "yup";
 import {
-  TextField,
+  Alert,
+  Box,
+  Button,
   Checkbox,
   FormControl,
-  InputLabel,
-  Select,
   FormControlLabel,
-  Button,
-  Box,
+  FormLabel,
+  Input,
+  InputLabel,
   MenuItem,
+  Paper,
+  Select,
+  Snackbar,
+  TextField,
 } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { Movie } from "../../models/movie.model";
+import { Form, Formik } from "formik";
+import React from "react";
+import * as Yup from "yup";
+
+import { getDownloadURL, ref, uploadBytes } from "@firebase/storage";
+import { storage } from "../../config/firebase";
+import MoviesServices from "../../services/movies.service";
+
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const MovieModelSchema = Yup.object().shape({
   name: Yup.string().required("Required"),
   company: Yup.string().required("Required"),
-  logo: Yup.string().required("Required"),
-  releasedOn: Yup.date(),
+  releasedOn: Yup.date().required("Required"),
   duration: Yup.number().required("Required"),
   description: Yup.string().required("Required"),
   ageRestrictions: Yup.string().required("Required"),
@@ -33,13 +42,20 @@ const MovieModelSchema = Yup.object().shape({
 const MovieAddEdit = ({ editingMovie }: any) => {
   const isEditing = editingMovie !== null;
 
-  const navigate = useNavigate();
+  const [file, setFile] = React.useState();
+  const [imageUrl, setImageUrl] = React.useState(
+    isEditing ? editingMovie.logo : ""
+  );
 
-  const initialValues: Movie = {
+  const [isLoading, setIsLoading] = React.useState(false);
+
+  const [successSnackbarOpen, setSuccessSnackbarOpen] = React.useState(false);
+  const [errorSnackbarOpen, setErrorSnackbarOpen] = React.useState(false);
+
+  const initialValues = {
     name: editingMovie?.name ?? "",
     company: editingMovie?.company ?? "",
-    logo: editingMovie?.logo ?? "",
-    releasedOn: editingMovie?.releasedOn ?? new Date(),
+    releasedOn: editingMovie?.releasedOn.substring(0, 10) ?? new Date(),
     duration: editingMovie?.duration ?? 0,
     description: editingMovie?.description ?? "",
     ageRestrictions: editingMovie?.ageRestrictions ?? "",
@@ -50,12 +66,121 @@ const MovieAddEdit = ({ editingMovie }: any) => {
     isEditorChoice: editingMovie?.isEditorChoice ?? false,
   };
 
+  const handleSuccessSnackbarClose = (event: any, reason: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSuccessSnackbarOpen(false);
+  };
+
+  const handleErrorSnackbarClose = (event: any, reason: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setErrorSnackbarOpen(false);
+  };
+
+  const handleFileChange = (event: any) => {
+    const file = event.target.files[0];
+    setFile(file);
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setImageUrl((e.target as any).result);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleFileUpload = async (fileName: string) => {
+    if (file) {
+      const storageRef = ref(storage, fileName);
+      await uploadBytes(storageRef, file as any);
+      const url = await getDownloadURL(storageRef);
+      return url;
+    } else {
+      return imageUrl;
+    }
+  };
+
+  const handleMovieCreate = async (values: any) => {
+    setIsLoading(true);
+    const imgName = `${values.name}${values.company}`
+      .trim()
+      .replace(/\s+/g, "-");
+    const imgUrl = await handleFileUpload(imgName);
+    const res = await MoviesServices.createMovie({
+      ...values,
+      logo: imgUrl,
+      stars: 0,
+      downloads: 0,
+    } as any);
+    setIsLoading(false);
+    if (res.success) {
+      setSuccessSnackbarOpen(true);
+    } else {
+      setErrorSnackbarOpen(true);
+    }
+  };
+
+  const handleMovieEdit = async (values: any) => {
+    setIsLoading(true);
+    const imgName = `${values.name}${values.company}`
+      .trim()
+      .replace(/\s+/g, "-");
+    const imgUrl = await handleFileUpload(imgName);
+    const res = await MoviesServices.editMovie({
+      ...values,
+      _id: editingMovie._id,
+      logo: imgUrl,
+    } as any);
+    setIsLoading(false);
+    if (res.success) {
+      setSuccessSnackbarOpen(true);
+    } else {
+      setErrorSnackbarOpen(true);
+    }
+  };
+
   return (
     <Box sx={{ paddingTop: "5%" }}>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <Snackbar
+        open={successSnackbarOpen}
+        autoHideDuration={5000}
+        onClose={handleSuccessSnackbarClose}
+      >
+        <Alert onClose={() => handleSuccessSnackbarClose} severity="success">
+          {isEditing
+            ? "Movie successfully updated!"
+            : "Movie successfully created!"}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        open={errorSnackbarOpen}
+        autoHideDuration={5000}
+        onClose={handleErrorSnackbarClose}
+      >
+        <Alert onClose={() => handleErrorSnackbarClose} severity="error">
+          {isEditing
+            ? "An error occurred while updating the movie!"
+            : "An error occurred while creating the movie!"}
+        </Alert>
+      </Snackbar>
       <Formik
         initialValues={initialValues}
         validationSchema={MovieModelSchema}
-        onSubmit={async (values: Movie) => {}}
+        onSubmit={async (values) => {
+          if (isEditing) {
+            handleMovieEdit(values);
+          } else {
+            handleMovieCreate(values);
+          }
+        }}
       >
         {({ values, handleChange, errors, touched }) => (
           <Form>
@@ -79,24 +204,32 @@ const MovieAddEdit = ({ editingMovie }: any) => {
               error={touched.company && !!errors.company}
               helperText={touched.company && errors.company}
             />
+            <Box sx={{ p: 2 }}>
+              <FormControl fullWidth sx={{ margin: "13px 0px" }}>
+                <FormLabel>Logo</FormLabel>
+                <Input type="file" onChange={handleFileChange} />
+              </FormControl>
+
+              {imageUrl && (
+                <Paper sx={{ p: 2, mt: 2 }}>
+                  <Box sx={{ display: "flex", justifyContent: "center" }}>
+                    <img
+                      src={imageUrl}
+                      alt="Preview"
+                      style={{ maxWidth: "100%" }}
+                    />
+                  </Box>
+                </Paper>
+              )}
+            </Box>
             <TextField
               sx={{ margin: "13px 0px" }}
               fullWidth
-              name="logo"
-              label="Logo"
-              value={values.logo}
-              onChange={handleChange}
-              error={touched.logo && !!errors.logo}
-              helperText={touched.logo && errors.logo}
-            />
-            <TextField
-              sx={{ margin: "13px 0px" }}
-              fullWidth
-              disabled={!isEditing}
               name="releasedOn"
               label="Released On"
               type="date"
-              value={values.releasedOn.toString().substring(0, 10)}
+              value={values.releasedOn}
+              onChange={handleChange}
               InputLabelProps={{
                 shrink: true,
               }}
@@ -153,24 +286,6 @@ const MovieAddEdit = ({ editingMovie }: any) => {
               error={touched.price && !!errors.price}
               helperText={touched.price && errors.price}
             />
-            <TextField
-              sx={{ margin: "13px 0px" }}
-              fullWidth
-              disabled={!isEditing}
-              name="stars"
-              label="Stars"
-              type="number"
-              value={values.stars}
-            />
-            <TextField
-              sx={{ margin: "13px 0px" }}
-              fullWidth
-              disabled={!isEditing}
-              name="downloads"
-              label="Downloads"
-              type="number"
-              value={values.downloads}
-            />
             <FormControl fullWidth sx={{ margin: "13px 0px" }}>
               <InputLabel>Tags</InputLabel>
               <Select
@@ -216,13 +331,6 @@ const MovieAddEdit = ({ editingMovie }: any) => {
             >
               <Button variant="contained" color="primary" type="submit">
                 {isEditing ? "Update" : "Create"}
-              </Button>
-              <Button
-                variant="outlined"
-                color="secondary"
-                onClick={() => navigate(-1)}
-              >
-                Cancel
               </Button>
             </Box>
           </Form>

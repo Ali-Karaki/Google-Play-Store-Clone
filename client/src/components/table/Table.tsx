@@ -29,6 +29,7 @@ const TableComponent = ({ data, deleteItem }: TableComponentProps) => {
           <TableRow>
             <TableCell>Logo</TableCell>
             <TableCell>Name</TableCell>
+            <TableCell>Company</TableCell>
             <TableCell>Description</TableCell>
             <TableCell></TableCell>
           </TableRow>
@@ -36,12 +37,13 @@ const TableComponent = ({ data, deleteItem }: TableComponentProps) => {
         <TableBody>
           {data.map((item, index) => (
             <TableRow key={index}>
-              <TableCell component="th" scope="row">
-                <img src={item.logo} alt={item.name} width="50" />
+              <TableCell style={styles.smallCol} component="th" scope="row">
+                <img style={styles.logo} src={item.logo} alt={item.name} />
               </TableCell>
-              <TableCell>{item.name}</TableCell>
-              <TableCell>{item.description}</TableCell>
-              <TableCell>
+              <TableCell style={styles.smallCol}>{item.name}</TableCell>
+              <TableCell style={styles.smallCol}>{item.company}</TableCell>
+              <TableCell style={styles.bigCol}>{item.description}</TableCell>
+              <TableCell style={styles.smallerCol}>
                 <DeleteIcon onClick={() => deleteItem(item._id)} />
                 <EditIcon onClick={() => editItem(item)} />
               </TableCell>
@@ -51,6 +53,31 @@ const TableComponent = ({ data, deleteItem }: TableComponentProps) => {
       </Table>
     </TableContainer>
   );
+};
+
+interface BigCol {
+  [key: string]: string;
+}
+
+const bigCol: BigCol = {
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  maxWidth: "200px",
+};
+
+const styles: any = {
+  logo: {
+    width: "70px",
+    height: "70px",
+  },
+  smallerCol: {
+    width: "10%",
+  },
+  smallCol: {
+    width: "20%",
+  },
+  bigCol: bigCol,
 };
 
 export default TableComponent;
