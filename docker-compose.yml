@@ -20,5 +20,5 @@ services:
     ports:
       - "3001:3001"
 
-    environment:
-      - MONGO_URI=${MONGO_URI}
+    env_file:
+      - .env
