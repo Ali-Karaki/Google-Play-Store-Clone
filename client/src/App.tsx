@@ -7,6 +7,7 @@ import routes from "./config/routes";
 import { checkTokenExpiration } from "./services/auth.service";
 
 function App() {
+  const noNavBar = ["admin", "view", "wishlist"];
   checkTokenExpiration();
   return (
     <>
@@ -21,8 +22,9 @@ function App() {
                   <>
                     <AuthCheck>
                       <NavBar />
-                      {!route.path.includes("admin") &&
-                        !route.path.includes("view") && <FilteringNavBar />}
+                      {!noNavBar.some((path) => route.path.includes(path)) && (
+                        <FilteringNavBar />
+                      )}
                       <route.component />
                     </AuthCheck>
                   </>

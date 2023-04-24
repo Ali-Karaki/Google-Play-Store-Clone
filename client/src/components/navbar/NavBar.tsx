@@ -13,6 +13,8 @@ import SearchBar from "./SearchBar";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import AddIcon from "@mui/icons-material/Add";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+
 
 const NavBar = () => {
   const PAGES = ["Games", "Apps", "Movies", "Books"];
@@ -67,8 +69,20 @@ const NavBar = () => {
     }
   };
 
+  const wishList = () => {
+    navigate(`/wishlist`);
+  }
+
   const getAccountData = () => {
     const data = [
+      {
+        key: "wishList",
+        isAdmin: false,
+        isAdminMode: false,
+        label: "Wish List",
+        onClick: () => wishList(),
+        icon: <ShoppingCartIcon />,
+      },
       {
         key: "admin",
         isAdmin: true,
