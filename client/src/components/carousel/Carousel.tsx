@@ -85,7 +85,7 @@ const styles = {
     color: "#5F6368",
   },
   stars: {
-    fontSize: "15px",
+    fontSize: "18px",
     fontWeight: "600",
     color: "#5F6368",
   },
