@@ -4,6 +4,7 @@ import { Checkbox, FormControlLabel } from "@material-ui/core";
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
 } from "firebase/auth";
@@ -19,6 +20,7 @@ import {
   TextField,
   Theme,
   Typography,
+  Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions
 } from "@mui/material";
 
 const Login = () => {
@@ -144,6 +146,17 @@ const Login = () => {
     localStorage.setItem(LOCAL_STORAGE.USER_ID, user.message._id);
   };
 
+  const [forgotPassword, setForgotPassword] = useState(false);
+
+  const handleForgotPassword = async () => {
+    try {
+      await sendPasswordResetEmail(auth, email);
+      alert("Password reset email sent. Please check your inbox.");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <Grid
       container
@@ -218,6 +231,33 @@ const Login = () => {
             >
               Continue With Google
             </Button>
+            {/* Forgot Password Dialog */}
+          <Dialog open={forgotPassword} onClose={() => setForgotPassword(false)}>
+            <DialogTitle>Forgot Password?</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Please enter your email address to reset your password.
+              </DialogContentText>
+              <TextField
+                autoFocus
+                margin="dense"
+                label="Email Address"
+                type="email"
+                fullWidth
+                value={email}
+                onChange={handleEmailChange}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={() => setForgotPassword(false)}>Cancel</Button>
+              <Button onClick={handleForgotPassword} variant="contained" color="primary">
+                Send Reset Link
+              </Button>
+            </DialogActions>
+          </Dialog>
+
+      {/* Forgot Password Link */}
+      <div onClick={() => setForgotPassword(true)}>Forgot Password?</div>
             {!hasAccount && (
               <>
                 <FormControlLabel
