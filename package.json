@@ -1,6 +1,8 @@
 {
   "dependencies": {
-    "concurrently": "^7.6.0"
+    "axios": "^1.4.0",
+    "concurrently": "^7.6.0",
+    "react-geolocation": "^1.0.4"
   },
   "scripts": {
     "ins": "cd server && npm i && cd ../client && npm i",

@@ -3,6 +3,7 @@ import "./App.css";
 import AuthCheck from "./components/auth/AuthChecker";
 import FilteringNavBar from "./components/filteringNavBar/FilteringNavBar";
 import NavBar from "./components/navbar/NavBar";
+import Footer from "./components/footer/Footer"
 import routes from "./config/routes";
 import { checkTokenExpiration } from "./services/auth.service";
 
@@ -24,6 +25,7 @@ function App() {
                       {!route.path.includes("admin") &&
                         !route.path.includes("view") && <FilteringNavBar />}
                       <route.component />
+                      <Footer />
                     </AuthCheck>
                   </>
                 ) : (
