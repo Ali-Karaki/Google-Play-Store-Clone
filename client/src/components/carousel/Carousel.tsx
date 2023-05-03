@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Carousel from "react-material-ui-carousel";
-import { Typography } from "@material-ui/core";
+import { Typography, Button } from "@material-ui/core";
 import StarRateIcon from "@mui/icons-material/StarRate";
 import { Box } from "@mui/material";
 import { CarouselProps, CarouselData, ItemProps } from "./Carousel.types";
@@ -60,6 +60,9 @@ const Item = ({ chunk, onHover, offHover }: ItemProps) => {
               <Typography style={styles.name}>{item.stars}</Typography>
               <StarRateIcon style={styles.stars} />
             </Box>
+            <Button variant="contained" style={styles.installBtn}>
+              {item.price === 0 ? "Free" : `Install (${item.price}$)`}
+            </Button>
           </Box>
         </Box>
       ))}
@@ -92,6 +95,13 @@ const styles = {
   appDetails: {
     marginLeft: "10px",
   },
+  installBtn: {
+    color: "white",
+    backgroundColor: "#355E3B",
+    fontSize: "12px",
+    marginTop: "6px",
+    width: "100%"
+  }
 };
 
 export default CarouselComponent;

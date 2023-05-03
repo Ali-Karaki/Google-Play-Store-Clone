@@ -4,6 +4,7 @@ export interface WishlistItem {
   category: string;
   stars: number;
   logo: string;
+  price: number;
 }
 
 export interface UserModel {

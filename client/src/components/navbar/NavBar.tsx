@@ -3,6 +3,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import { AppBar, Box, Button, Toolbar, Typography } from "@mui/material";
 import "firebase/auth";
 import { useEffect, useState } from "react";
+import Select from "react-select";
 import { useLocation, useNavigate } from "react-router-dom";
 import { auth } from "../../config/firebase";
 import googlePlayIcon from "../../icons/Google_Play_Logo.png";
@@ -34,12 +35,24 @@ const NavBar = () => {
     navigate(path);
   };
 
+  const currencies = [
+    { value: "USD", label: "USD" },
+    { value: "LBP", label: "LBP" }
+  ];
+
+  const defaultCurrency = currencies[0];
+
+  const [currency, setCurrency] = useState(defaultCurrency)
   const [isSearching, setIsSearching] = useState(false);
   const [search, setSearch] = useState("");
 
   const handleSearch = () => {
     setIsSearching(true);
   };
+
+  const changeCurrency = (currency: any) => {
+    setCurrency(currency);
+  }
 
   const handleHelp = () => {};
 
@@ -133,6 +146,13 @@ const NavBar = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location]);
 
+  const customStyles = {
+    option: (provided: any, state: any) => ({
+      ...provided,
+      color: state.isSelected ? 'white' : 'black', // Set the color of the selected option to white and the others to black
+    }),
+  };
+
   return (
     <Box sx={styles.container}>
       <AppBar sx={styles.appBar} position="static">
@@ -191,7 +211,14 @@ const NavBar = () => {
           <Box sx={styles.mainCols}>
             <Box sx={styles.iconsGroup}>
               {!isSearching && (
-                <SearchIcon onClick={handleSearch} sx={styles.rightIcons} />
+                <><SearchIcon onClick={handleSearch} sx={styles.rightIcons} />
+                <Select
+                  value={currency}
+                  onChange={changeCurrency}
+                  options={currencies}
+                  defaultValue={defaultCurrency}
+                  styles={customStyles}
+                /></>
               )}
               <HelpOutlineIcon onClick={handleHelp} sx={styles.rightIcons} />
               <PopoverComp>
@@ -276,6 +303,10 @@ const styles = {
     fontSize: "25px",
     margin: "0px 10px",
   },
+  currency: {
+    color: "#5F6368",
+    cursor: "pointer"
+  }
 };
 
 export default NavBar;

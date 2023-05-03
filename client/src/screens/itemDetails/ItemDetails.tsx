@@ -47,6 +47,7 @@ export default function ItemDetails() {
       category: page,
       stars: item.stars,
       logo: item.logo,
+      price: item.price
     });
     if (res.success) {
       setInWishList(true);
@@ -141,7 +142,9 @@ export default function ItemDetails() {
 
               <Grid container spacing={2}>
                 <Grid item xs={2}>
-                  <Button style={styles.installBttn}>Install</Button>
+                <Button style={styles.installBttn}>
+                    {item.price === 0 ? "Install For Free" : `Install For $${item.price}`}
+                  </Button>
                 </Grid>
                 <Grid item xs={2}>
                   {inWishList ? (

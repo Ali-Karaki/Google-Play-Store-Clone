@@ -6,6 +6,7 @@ import {
   CardMedia,
   Grid,
   Typography,
+  Button
 } from "@mui/material";
 import { Rating } from "@mui/lab";
 import { WishlistItem } from "../../models/user.model";
@@ -19,7 +20,7 @@ const WishList = () => {
 
   const getWishList = async () => {
     const res: WishlistItem[] = await UserServices.getWishList();
-    setWishList([...res, ...res, ...res, ...res, ...res, ...res, ]);
+    setWishList([...res, ...res, ...res, ...res, ...res, ...res]);
   };
 
   const handleNavigate = (item: any) => {
@@ -53,6 +54,9 @@ const WishList = () => {
                 >
                   <Rating value={item.stars} precision={0.1} readOnly />
                 </Box>
+              <Button style={styles.installBttn}>
+                    {item.price === 0 ? "Install For Free" : `Install For $${item.price}`}
+              </Button>
               </CardContent>
             </Card>
           </Grid>
@@ -67,6 +71,13 @@ const styles = {
     margin: "7% 7%",
     position: "relative",
     zIndex: 0,
+  },
+  installBttn: {
+    color: "white",
+    backgroundColor: "#355E3B	",
+    padding: "6px 10px",
+    fontSize: "12px",
+    marginTop: "6px"
   },
 };
 export default WishList;

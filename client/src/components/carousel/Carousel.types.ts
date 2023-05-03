@@ -3,6 +3,7 @@ export interface CarouselData {
   name: string;
   logo: string;
   stars: number;
+  price: number;
 }
 
 export interface CarouselProps {

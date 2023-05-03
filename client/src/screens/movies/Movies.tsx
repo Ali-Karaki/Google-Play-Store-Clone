@@ -42,6 +42,7 @@ const Movies = () => {
       name: item.name,
       logo: item.logo,
       stars: item.stars,
+      price: item.price
     }));
   };
 
