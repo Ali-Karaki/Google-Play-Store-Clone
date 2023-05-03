@@ -6,6 +6,7 @@ import Applications from "../screens/apps/Applications";
 import Admin from "../screens/admin/Admin";
 import ItemAddEdit from "../screens/addItem/ItemAddEdit";
 import ItemDetails from "../screens/itemDetails/ItemDetails";
+import WishList from "../screens/wishList/WishList";
 
 export interface RouteType {
   path: string;
@@ -55,6 +56,12 @@ const routes: RouteType[] = [
     path: "/store/:page/view/:id",
     component: ItemDetails,
     name: "Item Details",
+    protected: true,
+  },
+  {
+    path: "/wishlist",
+    component: WishList,
+    name: "WishList Page",
     protected: true,
   },
   {

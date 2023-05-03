@@ -14,7 +14,6 @@ router.get("/getUsers", async (req, res) => {
   ) {
     const { message } = authenticated;
     return res.status(400).json({ message: message, success: false });
-    return;
   }
 
   try {
@@ -49,7 +48,6 @@ router.post("/createUser", async (req, res) => {
   ) {
     const { message } = authenticated;
     return res.status(400).json({ message: message, success: false });
-    return;
   }
 
   const { name, email, rememberMe } = req.body;
@@ -101,6 +99,74 @@ router.post("/deleteUser", async (req, res) => {
     res
       .status(500)
       .json({ message: "Unable to delete the user", success: false });
+  }
+});
+
+router.post("/getWishList", async (req, res) => {
+  const authenticated = await authenticate(req);
+  if (
+    !authenticated ||
+    authenticated.status !== 200 ||
+    !authenticated.userData
+  ) {
+    const { message } = authenticated;
+    return res.status(400).json({ message: message, success: false });
+  }
+
+  const { userId } = req.body;
+  try {
+    const user = await User.findById(userId);
+    return res.status(200).json({ message: user.wishlist, success: true });
+  } catch (error) {
+    return res.status(500).json({ message: error, success: false });
+  }
+});
+
+router.post("/removeFromWishList", async (req, res) => {
+  const authenticated = await authenticate(req);
+  if (
+    !authenticated ||
+    authenticated.status !== 200 ||
+    !authenticated.userData
+  ) {
+    const { message } = authenticated;
+    return res.status(400).json({ message: message, success: false });
+  }
+
+  const { itemId, userId } = req.body;
+  try {
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $pull: { wishlist: { _id: itemId } } },
+      { new: true }
+    );
+    return res.status(200).json({ message: user.wishlist, success: true });
+  } catch (error) {
+    return res.status(500).json({ message: error, success: false });
+  }
+});
+
+router.post("/addToWishList", async (req, res) => {
+  const authenticated = await authenticate(req);
+  if (
+    !authenticated ||
+    authenticated.status !== 200 ||
+    !authenticated.userData
+  ) {
+    const { message } = authenticated;
+    return res.status(400).json({ message: message, success: false });
+  }
+
+  const { item, userId } = req.body;
+  try {
+    const user = await User.findByIdAndUpdate(
+      userId,
+      { $addToSet: { wishlist: item } },
+      { new: true }
+    );
+    return res.status(200).json({ message: user.wishlist, success: true });
+  } catch (error) {
+    return res.status(500).json({ message: error, success: false });
   }
 });
 
