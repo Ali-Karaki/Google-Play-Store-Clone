@@ -66,6 +66,7 @@ export default function ItemDetails() {
 
   React.useEffect(() => {
     getItemInWishList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item, inWishList]);
 
   return (
@@ -121,7 +122,7 @@ export default function ItemDetails() {
                   </Typography>
                 </Box>
 
-                <Box sx={styles.boxInfoRight}>
+                <Box sx={styles.boxInfoMid}>
                   <Typography
                     sx={styles.boxTypo}
                     variant="body2"
@@ -137,6 +138,43 @@ export default function ItemDetails() {
                     Age Restriction
                   </Typography>
                 </Box>
+
+                <Box sx={styles.boxInfoRight}>
+                  <Typography
+                    style={styles.boxTypo}
+                    variant="body2"
+                    color="text.primary"
+                  >
+                    {item.tags[0]}
+                    {item.category}
+                  </Typography>
+                  <Typography
+                    style={styles.boxTypo}
+                    variant="body2"
+                    color="text.secondary"
+                  >
+                    Genre
+                  </Typography>
+                </Box>
+
+                {page === "movies" && (
+                <Box sx={styles.boxInfoRightMovies}>
+                <Typography
+                  style={styles.boxTypo}
+                  variant="body2"
+                  color="text.primary"
+                >
+                  {item.duration}
+                </Typography>
+                <Typography
+                  style={styles.boxTypo}
+                  variant="body2"
+                  color="text.secondary"
+                >
+                  Duration(min)
+                </Typography>
+              </Box>
+              )}
               </Box>
 
               <Grid container spacing={2}>
@@ -176,6 +214,25 @@ export default function ItemDetails() {
                   )}
                 </Grid>
               </Grid>
+
+              <Typography style={styles.description}>
+                <p style={styles.desc}>Description</p>
+                {item.description}
+              </Typography>
+              
+              {page === "movies" && (
+                <Typography style={styles.movieDetails}>
+                <p style={styles.desc}>Cast</p>
+                {item.cast.join(", ")}
+              </Typography>
+              )}
+
+              {page === "movies" && (
+                <Typography style={styles.movieDetails}>
+                <p style={styles.desc}>Credits</p>
+                {item.credits.join(", ")}
+              </Typography>
+              )}
             </Grid>
             <Grid item xs={2}>
               <img style={styles.logo} src={item.logo} alt={item.name} />
@@ -218,6 +275,13 @@ const styles = {
   boxInfoRight: {
     position: "relative",
     paddingLeft: "20px",
+    paddingRight: "20px",
+    borderRight: "1px solid rgba(1, 135, 95, 0.5)",
+  },
+
+  boxInfoRightMovies : {
+    position: "relative",
+    paddingLeft: "20px",
   },
   boxTypo: {
     fontSize: "13px",
@@ -229,7 +293,7 @@ const styles = {
   },
   installBttn: {
     color: "white",
-    backgroundColor: "#355E3B	",
+    backgroundColor: "#355E3B",
     padding: "13px 30px",
     fontSize: "12px",
   },
@@ -237,4 +301,21 @@ const styles = {
     color: "#355E3B",
     fontSize: "12px",
   },
+
+  description: {
+    marginTop: "60px",
+    width: "700px",
+  },
+
+  desc: {
+    fontSize: "20px",
+    marginBottom: "10px",
+    textDecoration: "underline",
+    color: "rgb(95,99,104)",
+  },
+
+  movieDetails :{
+    marginTop: "20px"
+  },
+
 };

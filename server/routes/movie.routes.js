@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { Movie } from "../schemas/movie.schema.js";
-import { authenticate } from "../utilities.js";
+import { authenticate, notifyUsers } from "../utilities.js";
 
 const router = Router();
 
@@ -56,6 +56,7 @@ router.post("/createMovie", async (req, res) => {
   }
   try {
     const movie = await Movie.create(req.body);
+    await notifyUsers("Movie", movie.description, movie._id);
     return res.status(200).json({ message: movie, success: true });
   } catch (error) {
     return res.status(400).json({ message: error.message, success: false });

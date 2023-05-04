@@ -49,6 +49,14 @@ const MovieSchema = new Schema({
     type: [String],
     required: true,
   },
+  credits: {
+    type: [String],
+    required: true,
+  },
+  cast: {
+    type: [String],
+    required: true,
+  },
   isEditorChoice: {
     type: Boolean,
     required: true,
