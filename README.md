@@ -1,6 +1,6 @@
 # Google Play Store Clone
 
-This is a web application that is a clone of Google Play Store, which allows users to browse and purchase digital content, such as applications, games, movies, and books. Users can sign up, log in, and filter content based on different categories and subcategories. The application also features a wishlist, search functionality, and email notifications for up-to-date news and offers.
+This is a web application that is a clone of Google Play Store, which allows users to browse digital content, such as applications, games, movies, and books. Users can sign up, log in, and filter content based on different categories and subcategories. The application also features a wishlist, search functionality, and email notifications for up-to-date news and offers.
 
 ## Installation and Running
 
