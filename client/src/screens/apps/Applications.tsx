@@ -98,9 +98,11 @@ const styles = {
     marginBottom: "20px",
   },
   sectionTitle: {
-    fontSize: "22px !important",
+    fontSize: "24px !important",
     fontWeight: "600 !important",
     color: "#5F6368",
+    marginBottom: "30px",
+    marginLeft: "30px",
   },
 };
 

@@ -15,7 +15,7 @@ import {
   TextField,
 } from "@mui/material";
 import { Form, Formik } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import * as Yup from "yup";
 import AppsServices from "../../services/apps.service";
 
@@ -45,15 +45,15 @@ const AppModelSchema = Yup.object().shape({
 const AppAddEdit = ({ editingApp }: any) => {
   const isEditing = editingApp !== null;
 
-  const [file, setFile] = React.useState();
-  const [imageUrl, setImageUrl] = React.useState(
+  const [file, setFile] = useState();
+  const [imageUrl, setImageUrl] = useState(
     isEditing ? editingApp.logo : ""
   );
 
-  const [isLoading, setIsLoading] = React.useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const [successSnackbarOpen, setSuccessSnackbarOpen] = React.useState(false);
-  const [errorSnackbarOpen, setErrorSnackbarOpen] = React.useState(false);
+  const [successSnackbarOpen, setSuccessSnackbarOpen] = useState(false);
+  const [errorSnackbarOpen, setErrorSnackbarOpen] = useState(false);
 
   const initialValues = {
     name: editingApp?.name ?? "",

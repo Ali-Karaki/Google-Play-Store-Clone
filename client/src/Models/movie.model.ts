@@ -19,6 +19,8 @@ export interface MovieModel {
     | "Romance"
     | "Science Fiction"
   >;
+  credits: string[];
+  cast: string[];
   isEditorChoice: boolean;
 }
 

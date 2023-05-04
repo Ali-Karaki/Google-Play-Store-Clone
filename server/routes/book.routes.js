@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { Book } from "../schemas/book.schema.js";
-import { authenticate } from "../utilities.js";
+import { authenticate, notifyUsers } from "../utilities.js";
 
 const router = Router();
 
@@ -56,6 +56,7 @@ router.post("/createBook", async (req, res) => {
   }
   try {
     const book = await Book.create(req.body);
+    await notifyUsers("Book", book.description, book._id);
     return res.status(200).json({ message: book, success: true });
   } catch (error) {
     return res.status(400).json({ message: error.message, success: false });
