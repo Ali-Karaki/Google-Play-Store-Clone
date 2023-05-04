@@ -7,7 +7,7 @@ import {
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
-} from "firebase/auth";
+} from "@firebase/auth";
 import { auth, Providers } from "../../config/firebase";
 import GoogleLogo from "../../icons/google.svg";
 import { LOCAL_STORAGE } from "../../models/localstorage.model";

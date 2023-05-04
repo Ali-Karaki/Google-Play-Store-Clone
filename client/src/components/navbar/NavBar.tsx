@@ -15,6 +15,8 @@ import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import AddIcon from "@mui/icons-material/Add";
 import AdminPanelSettingsIcon from "@mui/icons-material/AdminPanelSettings";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import { useSelector, useDispatch } from 'react-redux';
+import { setCurrency } from '../../currencyReducer';
 
 
 const NavBar = () => {
@@ -40,9 +42,13 @@ const NavBar = () => {
     { value: "LBP", label: "LBP" }
   ];
 
-  const defaultCurrency = currencies[0];
+  const currency = useSelector((state: any) => state.currency);
+  const dispatch = useDispatch();
 
-  const [currency, setCurrency] = useState(defaultCurrency)
+  const changeCurrency = (newCurrency: string) => {
+    dispatch(setCurrency(newCurrency));
+  };
+
   const [isSearching, setIsSearching] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -50,9 +56,6 @@ const NavBar = () => {
     setIsSearching(true);
   };
 
-  const changeCurrency = (currency: any) => {
-    setCurrency(currency);
-  }
 
   const handleHelp = () => {};
 
@@ -216,8 +219,9 @@ const NavBar = () => {
                   value={currency}
                   onChange={changeCurrency}
                   options={currencies}
-                  defaultValue={defaultCurrency}
+                  defaultValue="USD"
                   styles={customStyles}
+                  placeholder={"Choose a currency"}
                 /></>
               )}
               <HelpOutlineIcon onClick={handleHelp} sx={styles.rightIcons} />

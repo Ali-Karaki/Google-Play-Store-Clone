@@ -8,6 +8,7 @@ import { useLocation } from "react-router-dom";
 import { BookModel } from "../../models/book.model";
 import { CarouselData } from "../../components/carousel/Carousel.types";
 
+
 const Books = () => {
   const location = useLocation();
 

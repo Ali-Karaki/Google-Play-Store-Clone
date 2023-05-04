@@ -1,0 +1,9 @@
+export const firebaseConfig = {
+  apiKey: "AIzaSyD8D2omwWb5tbrDXXpprNMEfSVEBODPgfY",
+  authDomain: "play-replica.firebaseapp.com",
+  projectId: "play-replica",
+  storageBucket: "play-replica.appspot.com",
+  messagingSenderId: "731978532132",
+  appId: "1:731978532132:web:d216571f6dc7ef20945fb1",
+  measurementId: "G-PG36KZE7DL",
+};

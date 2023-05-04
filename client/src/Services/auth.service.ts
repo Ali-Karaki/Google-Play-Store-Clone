@@ -1,4 +1,4 @@
-import { getAuth } from "firebase/auth";
+import { getAuth } from "@firebase/auth";
 import { LOCAL_STORAGE } from "../models/localstorage.model";
 import jwt_decode from "jwt-decode";
 import UserServices from "./user.service";

@@ -12,6 +12,9 @@ import { Rating } from "@mui/lab";
 import { WishlistItem } from "../../models/user.model";
 import UserServices from "../../services/user.service";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import useExchangeRate from "../../currencyRate";
+
 
 const WishList = () => {
   const navigate = useNavigate();
@@ -20,7 +23,8 @@ const WishList = () => {
 
   const getWishList = async () => {
     const res: WishlistItem[] = await UserServices.getWishList();
-    setWishList([...res, ...res, ...res, ...res, ...res, ...res]);
+    setWishList([...res]);
+    console.log(res);
   };
 
   const handleNavigate = (item: any) => {
@@ -30,6 +34,19 @@ const WishList = () => {
   React.useEffect(() => {
     getWishList();
   }, []);
+
+  const currency = useSelector((state: any) => state.currency);
+  const rate = useExchangeRate();
+
+  const renderSwitchCurrency = (currency: string, price: number) => {
+    if (price === 0) return "Install For Free";
+    console.log(currency);
+    switch (currency) {
+      case "LBP": return `Install For ${Math.ceil(price * rate)} LBP`;
+      default:
+        return `Install For $${price}`;
+    }
+  }
 
   return (
     <Box sx={styles.container}>
@@ -55,7 +72,7 @@ const WishList = () => {
                   <Rating value={item.stars} precision={0.1} readOnly />
                 </Box>
               <Button style={styles.installBttn}>
-                    {item.price === 0 ? "Install For Free" : `Install For $${item.price}`}
+                {renderSwitchCurrency(currency.value, item.price)}    
               </Button>
               </CardContent>
             </Card>

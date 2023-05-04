@@ -5,6 +5,8 @@ import StarRateIcon from "@mui/icons-material/StarRate";
 import { Box } from "@mui/material";
 import { CarouselProps, CarouselData, ItemProps } from "./Carousel.types";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useSelector } from 'react-redux';
+import useExchangeRate from "../../currencyRate";
 
 const CarouselComponent = ({ data }: CarouselProps) => {
   const splitArrayIntoChunks = (array: any[], chunkSize: number): any[][] => {
@@ -42,6 +44,8 @@ const CarouselComponent = ({ data }: CarouselProps) => {
   );
 };
 
+
+
 const Item = ({ chunk, onHover, offHover }: ItemProps) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -49,6 +53,17 @@ const Item = ({ chunk, onHover, offHover }: ItemProps) => {
     const curPage = location.pathname.split("/store/")[1];
     navigate(`/store/${curPage}/view/${item.id}`);
   };
+  const currency = useSelector((state: any) => state.currency);
+  const rate = useExchangeRate();
+
+  const renderSwitchCurrency = (currency: string, price: number) => {
+    if (price === 0) return "Install For Free";
+    switch (currency) {
+      case "LBP": return `Install For ${Math.ceil(price * rate)} LBP`;
+      default:
+        return `Install For $${price}`;
+    }
+  }
   return (
     <Box sx={styles.container} onMouseEnter={onHover} onMouseLeave={offHover}>
       {chunk.map((item) => (
@@ -61,7 +76,7 @@ const Item = ({ chunk, onHover, offHover }: ItemProps) => {
               <StarRateIcon style={styles.stars} />
             </Box>
             <Button variant="contained" style={styles.installBtn}>
-              {item.price === 0 ? "Free" : `Install (${item.price}$)`}
+              {renderSwitchCurrency(currency.value, item.price)}
             </Button>
           </Box>
         </Box>

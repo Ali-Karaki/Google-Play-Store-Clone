@@ -6,6 +6,8 @@ import BooksServices from "../../services/books.service";
 import MoviesServices from "../../services/movies.service";
 import UserServices from "../../services/user.service";
 import { WishlistItem } from "../../models/user.model";
+import useExchangeRate from "../../currencyRate";
+import { useSelector } from "react-redux";
 
 export default function ItemDetails() {
   const location = useLocation();
@@ -47,7 +49,7 @@ export default function ItemDetails() {
       category: page,
       stars: item.stars,
       logo: item.logo,
-      price: item.price
+      price: item.price,
     });
     if (res.success) {
       setInWishList(true);
@@ -68,6 +70,20 @@ export default function ItemDetails() {
   React.useEffect(() => {
     getItemInWishList();
   }, [item, inWishList]);
+
+  const currency = useSelector((state: any) => state.currency);
+  const rate = useExchangeRate();
+
+  const renderSwitchCurrency = (currency: string, price: number) => {
+    if (price === 0) return "Install For Free";
+    console.log(currency);
+    switch (currency) {
+      case "LBP": return `Install For ${Math.ceil(price * rate)} LBP`;
+      default:
+        return `Install For $${price}`;
+    }
+  }
+
 
   return (
     <Box sx={styles.container}>
@@ -143,7 +159,7 @@ export default function ItemDetails() {
               <Grid container spacing={2}>
                 <Grid item xs={2}>
                 <Button style={styles.installBttn}>
-                    {item.price === 0 ? "Install For Free" : `Install For $${item.price}`}
+                    {renderSwitchCurrency(currency.value, item.price)}
                   </Button>
                 </Grid>
                 <Grid item xs={2}>
