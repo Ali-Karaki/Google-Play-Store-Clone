@@ -145,7 +145,7 @@ export default function ItemDetails() {
                     variant="body2"
                     color="text.primary"
                   >
-                    {item.tags}
+                    {item.tags[0]}
                     {item.category}
                   </Typography>
                   <Typography
@@ -156,6 +156,25 @@ export default function ItemDetails() {
                     Genre
                   </Typography>
                 </Box>
+
+                {page === "movies" && (
+                <Box sx={styles.boxInfoRightMovies}>
+                <Typography
+                  style={styles.boxTypo}
+                  variant="body2"
+                  color="text.primary"
+                >
+                  {item.duration}
+                </Typography>
+                <Typography
+                  style={styles.boxTypo}
+                  variant="body2"
+                  color="text.secondary"
+                >
+                  Duration(min)
+                </Typography>
+              </Box>
+              )}
               </Box>
 
               <Grid container spacing={2}>
@@ -200,6 +219,20 @@ export default function ItemDetails() {
                 <p style={styles.desc}>Description</p>
                 {item.description}
               </Typography>
+              
+              {page === "movies" && (
+                <Typography style={styles.movieDetails}>
+                <p style={styles.desc}>Cast</p>
+                {item.cast.join(", ")}
+              </Typography>
+              )}
+
+              {page === "movies" && (
+                <Typography style={styles.movieDetails}>
+                <p style={styles.desc}>Credits</p>
+                {item.credits.join(", ")}
+              </Typography>
+              )}
             </Grid>
             <Grid item xs={2}>
               <img style={styles.logo} src={item.logo} alt={item.name} />
@@ -242,6 +275,13 @@ const styles = {
   boxInfoRight: {
     position: "relative",
     paddingLeft: "20px",
+    paddingRight: "20px",
+    borderRight: "1px solid rgba(1, 135, 95, 0.5)",
+  },
+
+  boxInfoRightMovies : {
+    position: "relative",
+    paddingLeft: "20px",
   },
   boxTypo: {
     fontSize: "13px",
@@ -273,4 +313,9 @@ const styles = {
     textDecoration: "underline",
     color: "rgb(95,99,104)",
   },
+
+  movieDetails :{
+    marginTop: "20px"
+  },
+
 };
