@@ -121,7 +121,7 @@ export default function ItemDetails() {
                   </Typography>
                 </Box>
 
-                <Box sx={styles.boxInfoRight}>
+                <Box sx={styles.boxInfoMid}>
                   <Typography
                     sx={styles.boxTypo}
                     variant="body2"
@@ -135,6 +135,24 @@ export default function ItemDetails() {
                     color="text.secondary"
                   >
                     Age Restriction
+                  </Typography>
+                </Box>
+
+                <Box sx={styles.boxInfoRight}>
+                  <Typography
+                    style={styles.boxTypo}
+                    variant="body2"
+                    color="text.primary"
+                  >
+                    {item.tags}
+                    {item.category}
+                  </Typography>
+                  <Typography
+                    style={styles.boxTypo}
+                    variant="body2"
+                    color="text.secondary"
+                  >
+                    Genre
                   </Typography>
                 </Box>
               </Box>
@@ -176,6 +194,12 @@ export default function ItemDetails() {
                   )}
                 </Grid>
               </Grid>
+
+              <Typography style={styles.description}>
+                  <p style={styles.desc}>Description</p>
+                 {item.description}
+              </Typography>
+
             </Grid>
             <Grid item xs={2}>
               <img style={styles.logo} src={item.logo} alt={item.name} />
@@ -229,12 +253,24 @@ const styles = {
   },
   installBttn: {
     color: "white",
-    backgroundColor: "#355E3B	",
+    backgroundColor: "#355E3B",
     padding: "13px 30px",
     fontSize: "12px",
   },
   wishListBttn: {
     color: "#355E3B",
     fontSize: "12px",
+  },
+
+  description :{
+    marginTop: "60px",
+    width: "700px",
+  },
+
+  desc: {
+    fontSize: "20px",
+    marginBottom:"10px",
+    textDecoration: "underline",
+    color: "rgb(95,99,104)",
   },
 };

@@ -19,7 +19,7 @@ const WishList = () => {
 
   const getWishList = async () => {
     const res: WishlistItem[] = await UserServices.getWishList();
-    setWishList([...res, ...res, ...res, ...res, ...res, ...res, ]);
+    setWishList([...res]);
   };
 
   const handleNavigate = (item: any) => {
