@@ -197,28 +197,32 @@ export default function ItemDetails() {
               </Grid>
 
               <Typography style={styles.description}>
-                  <p style={styles.desc}>Description</p>
-                 {item.description}
+                <p style={styles.desc}>Description</p>
+                {item.description}
               </Typography>
 
               {page === "movies" && (
                 <Typography style={styles.movieDetails}>
-                <p style={styles.desc}>Cast</p>
-                {item.cast.join(", ")}
-              </Typography>
+                  <p style={styles.desc}>Cast</p>
+                  {item.cast.join(", ")}
+                </Typography>
               )}
 
               {page === "movies" && (
                 <Typography style={styles.movieDetails}>
-                <p style={styles.desc}>Credits</p>
-                {item.credits.join(", ")}
-              </Typography>
+                  <p style={styles.desc}>Credits</p>
+                  {item.credits.join(", ")}
+                </Typography>
               )}
 
               {page === "movies" && (
-                <Youtube link={item.trailerLink} />
+                <Typography style={styles.movieDetails}>
+                  <p style={styles.desc}>Watch Movie Trailer</p>
+                  
+                </Typography>
               )}
 
+              {page === "movies" && <Youtube link={item.trailerLink} />}
             </Grid>
             <Grid item xs={2}>
               <img style={styles.logo} src={item.logo} alt={item.name} />
@@ -281,19 +285,17 @@ const styles = {
     fontSize: "12px",
   },
 
-  description :{
+  description: {
     marginTop: "60px",
     width: "700px",
   },
 
   desc: {
     fontSize: "20px",
-    marginBottom:"10px",
+    marginBottom: "10px",
     textDecoration: "underline",
     color: "rgb(95,99,104)",
   },
 
-  movieDetails : {
-
-  },
+  movieDetails: {},
 };

@@ -58,7 +58,7 @@ const Item = ({ chunk, onHover, offHover }: ItemProps) => {
             <Typography style={styles.name}>{item.name}</Typography>
             <Box sx={styles.container}>
               <Typography style={styles.name}>{item.stars}</Typography>
-              <StarRateIcon style={styles.stars} />
+              <StarRateIcon style={styles.stars} />              
             </Box>
           </Box>
         </Box>
