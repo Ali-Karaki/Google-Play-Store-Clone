@@ -6,6 +6,7 @@ import BooksServices from "../../services/books.service";
 import MoviesServices from "../../services/movies.service";
 import UserServices from "../../services/user.service";
 import { WishlistItem } from "../../models/user.model";
+import Youtube from "../../components/youtube/Youtube";
 
 export default function ItemDetails() {
   const location = useLocation();
@@ -200,6 +201,24 @@ export default function ItemDetails() {
                  {item.description}
               </Typography>
 
+              {page === "movies" && (
+                <Typography style={styles.movieDetails}>
+                <p style={styles.desc}>Cast</p>
+                {item.cast.join(", ")}
+              </Typography>
+              )}
+
+              {page === "movies" && (
+                <Typography style={styles.movieDetails}>
+                <p style={styles.desc}>Credits</p>
+                {item.credits.join(", ")}
+              </Typography>
+              )}
+
+              {page === "movies" && (
+                <Youtube link={item.trailerLink} />
+              )}
+
             </Grid>
             <Grid item xs={2}>
               <img style={styles.logo} src={item.logo} alt={item.name} />
@@ -272,5 +291,9 @@ const styles = {
     marginBottom:"10px",
     textDecoration: "underline",
     color: "rgb(95,99,104)",
+  },
+
+  movieDetails : {
+
   },
 };

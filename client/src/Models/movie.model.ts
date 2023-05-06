@@ -20,6 +20,7 @@ export interface MovieModel {
     | "Science Fiction"
   >;
   isEditorChoice: boolean;
+  trailerLink: string;
 }
 
 export interface MovieResponse {
