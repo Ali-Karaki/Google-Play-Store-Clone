@@ -45,6 +45,10 @@ const MovieSchema = new Schema({
     type: Number,
     required: true,
   },
+  downloads: {
+    type: String,
+    required: true,
+  },
   tags: {
     type: [String],
     required: true,

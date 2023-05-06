@@ -37,6 +37,7 @@ const MovieModelSchema = Yup.object().shape({
   downloads: Yup.number().required("Required"),
   tags: Yup.array().min(1, "Select at least one tag"),
   isEditorChoice: Yup.boolean().required(),
+  trailerLink: Yup.string().required("Required"),
 });
 
 const MovieAddEdit = ({ editingMovie }: any) => {
@@ -64,6 +65,7 @@ const MovieAddEdit = ({ editingMovie }: any) => {
     downloads: editingMovie?.downloads ?? 0,
     tags: editingMovie?.tags ?? [],
     isEditorChoice: editingMovie?.isEditorChoice ?? false,
+    trailerLink: editingMovie?.trailerLink ?? ""
   };
 
   const handleSuccessSnackbarClose = (event: any, reason: string) => {
@@ -285,6 +287,16 @@ const MovieAddEdit = ({ editingMovie }: any) => {
               onChange={handleChange}
               error={touched.price && !!errors.price}
               helperText={touched.price && errors.price}
+            />
+                        <TextField
+              sx={{ margin: "13px 0px" }}
+              fullWidth
+              name="trailerLink"
+              label="Trailer Link"
+              value={values.trailerLink}
+              onChange={handleChange}
+              error={touched.trailerLink && !!errors.trailerLink}
+              helperText={touched.trailerLink && errors.trailerLink}
             />
             <FormControl fullWidth sx={{ margin: "13px 0px" }}>
               <InputLabel>Tags</InputLabel>
