@@ -4,6 +4,7 @@ import { Checkbox, FormControlLabel } from "@material-ui/core";
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
+  sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
 } from "firebase/auth";
@@ -19,6 +20,14 @@ import {
   TextField,
   Theme,
   Typography,
+  Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 
 const Login = () => {
@@ -31,6 +40,8 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [hasAccount, setHasAccount] = useState(true);
   const [rememberMe, setRememberMe] = useState(false);
+  const [openForgotDialog, setForgotDialog] = useState(false);
+  const [successSnackbarOpen, setSuccessSnackbarOpen] = useState(false);
 
   const handleNameChange = (e: any) => {
     setUsername(e.target.value);
@@ -135,6 +146,17 @@ const Login = () => {
     }
   };
 
+  const handleForgotPassword = async () => {
+    try {
+      const res = await sendPasswordResetEmail(auth, email);
+      console.log(res);
+      setForgotDialog(false);
+      setSuccessSnackbarOpen(true);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const createUser = async (
     name: string,
     mail: string,
@@ -142,6 +164,13 @@ const Login = () => {
   ) => {
     const user = await UserServices.createUser(name, mail, rememberme);
     localStorage.setItem(LOCAL_STORAGE.USER_ID, user.message._id);
+  };
+
+  const handleSuccessSnackbarClose = (event: any, reason: string) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSuccessSnackbarOpen(false);
   };
 
   return (
@@ -152,98 +181,148 @@ const Login = () => {
       style={styles.parentContainer}
     >
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
-        <div className={classes.paper}>
-          <>
-            <Typography component="h1" variant="h5">
-              {hasAccount ? "Log in" : "Sign up"}
-            </Typography>
+        <Box className={classes.paper}>
+          <Typography component="h1" variant="h5">
+            {hasAccount ? "Log in" : "Sign up"}
+          </Typography>
 
-            {!hasAccount && (
-              <TextField
-                variant="outlined"
-                margin="normal"
-                required
-                fullWidth
-                label="Name"
-                name="name"
-                autoFocus
-                value={username}
-                onChange={handleNameChange}
-              />
-            )}
+          {!hasAccount && (
             <TextField
               variant="outlined"
               margin="normal"
               required
               fullWidth
-              label="Email Address"
-              name="email"
+              label="Name"
+              name="name"
               autoFocus
-              value={email}
-              onChange={handleEmailChange}
+              value={username}
+              onChange={handleNameChange}
             />
-            <TextField
-              variant="outlined"
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Password"
-              type="password"
-              value={password}
-              onChange={handlePasswordChange}
-            />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-              onClick={handleSubmit}
+          )}
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            label="Email Address"
+            name="email"
+            autoFocus
+            value={email}
+            onChange={handleEmailChange}
+          />
+          <TextField
+            variant="outlined"
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Password"
+            type="password"
+            value={password}
+            onChange={handlePasswordChange}
+          />
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            className={classes.submit}
+            onClick={handleSubmit}
+          >
+            {hasAccount ? "Log in" : "Sign up"}
+          </Button>
+          <Button
+            style={styles.providerButton}
+            size="large"
+            variant="outlined"
+            startIcon={
+              <img
+                style={styles.googleLogo}
+                src={GoogleLogo}
+                alt="Google Logo"
+              />
+            }
+            onClick={signInWithGoogle}
+          >
+            Continue With Google
+          </Button>
+          {!hasAccount && (
+            <>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={rememberMe}
+                    onChange={handleCheckboxChange}
+                    color="primary"
+                  />
+                }
+                label="Remember me"
+              />
+            </>
+          )}
+
+          {hasAccount && (
+            <>
+              <Dialog
+                open={openForgotDialog}
+                onClose={() => setForgotDialog(false)}
+              >
+                <DialogTitle>Forgot Password?</DialogTitle>
+                <DialogContent>
+                  <DialogContentText>
+                    Please enter your email address to reset your password.
+                  </DialogContentText>
+                  <TextField
+                    autoFocus
+                    margin="dense"
+                    label="Email Address"
+                    type="email"
+                    fullWidth
+                    value={email}
+                    onChange={handleEmailChange}
+                  />
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={() => setForgotDialog(false)}>Cancel</Button>
+                  <Button
+                    onClick={handleForgotPassword}
+                    variant="contained"
+                    color="primary"
+                  >
+                    Send Reset Link
+                  </Button>
+                </DialogActions>
+              </Dialog>
+              <Button onClick={() => setForgotDialog(true)}>
+                Forgot Password?
+              </Button>
+            </>
+          )}
+
+          <Snackbar
+            open={successSnackbarOpen}
+            autoHideDuration={5000}
+            onClose={handleSuccessSnackbarClose}
+          >
+            <Alert
+              onClose={() => handleSuccessSnackbarClose}
+              severity="success"
             >
-              {hasAccount ? "Log in" : "Sign up"}
-            </Button>
-            <Button
-              style={styles.providerButton}
-              size="large"
-              variant="outlined"
-              startIcon={
-                <img
-                  style={styles.googleLogo}
-                  src={GoogleLogo}
-                  alt="Google Logo"
-                />
-              }
-              onClick={signInWithGoogle}
-            >
-              Continue With Google
-            </Button>
-            {!hasAccount && (
-              <>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={rememberMe}
-                      onChange={handleCheckboxChange}
-                      color="primary"
-                    />
-                  }
-                  label="Remember me"
-                />
-              </>
-            )}
-            <Typography
-              onClick={changeView}
-              component="h1"
-              variant="h6"
-              style={styles.switchTab}
-            >
-              {hasAccount
-                ? "Don't have an account? Sign up"
-                : "Already have an account? Log in"}
-            </Typography>
-          </>
-        </div>
+              "Reset link sent"
+            </Alert>
+          </Snackbar>
+
+          <Typography
+            onClick={changeView}
+            component="h1"
+            variant="h6"
+            style={styles.switchTab}
+          >
+            {hasAccount
+              ? "Don't have an account? Sign up"
+              : "Already have an account? Log in"}
+          </Typography>
+        </Box>
       </Grid>
     </Grid>
   );

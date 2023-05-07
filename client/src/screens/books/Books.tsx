@@ -2,8 +2,7 @@ import { Box } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import BooksServices from "../../services/books.service";
 import Typography from "@mui/material/Typography";
-import CarouselComponent, {
-} from "../../components/carousel/Carousel";
+import CarouselComponent from "../../components/carousel/Carousel";
 import { useLocation } from "react-router-dom";
 import { BookModel } from "../../models/book.model";
 import { CarouselData } from "../../components/carousel/Carousel.types";
@@ -89,9 +88,11 @@ const styles = {
     marginBottom: "20px",
   },
   sectionTitle: {
-    fontSize: "22px !important",
+    fontSize: "24px !important",
     fontWeight: "600 !important",
     color: "#5F6368",
+    marginBottom: "30px",
+    marginLeft: "30px",
   },
 };
 

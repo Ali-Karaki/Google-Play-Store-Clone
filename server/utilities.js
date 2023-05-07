@@ -1,4 +1,6 @@
 import admin from "firebase-admin";
+import sgMail from "@sendgrid/mail";
+import { User } from "./schemas/user.schema.js";
 
 export async function authenticate(req) {
   const response = {
@@ -31,3 +33,26 @@ export async function authenticate(req) {
   }
 }
 
+export async function notifyUsers(type, description, id) {
+  sgMail.setApiKey(process.env.apiKey);
+  const users = await User.find();
+  const emails = users.map((user) => user.email);
+
+  try {
+    for (const recipient of emails) {
+      const msg = {
+        to: recipient,
+        from: process.env.emailSender,
+        template_id: process.env.template,
+        dynamicTemplateData: {
+          type: type,
+          description: description,
+          id: id,
+        },
+      };
+      await sgMail.send(msg);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+}

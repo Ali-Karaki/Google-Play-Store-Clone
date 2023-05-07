@@ -19,7 +19,7 @@ const WishList = () => {
 
   const getWishList = async () => {
     const res: WishlistItem[] = await UserServices.getWishList();
-    setWishList([...res]);
+    setWishList(res);
   };
 
   const handleNavigate = (item: any) => {
@@ -51,7 +51,7 @@ const WishList = () => {
                   justifyContent="space-between"
                   alignItems="center"
                 >
-                  <Rating value={item.stars} precision={0.1} readOnly />
+                  <Rating value={item.stars / 2} precision={0.1} readOnly />
                 </Box>
               </CardContent>
             </Card>
