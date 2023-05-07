@@ -5,7 +5,7 @@
     "react-geolocation": "^1.0.4"
   },
   "scripts": {
-    "ins": "cd server && npm i && cd ../client && npm i",
+    "ins": "npm i && cd server && npm i && cd ../client && npm i",
     "server:dev": "npm run start --prefix server",
     "client:dev": "npm run start --prefix client",
     "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\" ",
