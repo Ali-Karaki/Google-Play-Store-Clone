@@ -65,7 +65,7 @@ const MovieAddEdit = ({ editingMovie }: any) => {
     downloads: editingMovie?.downloads ?? 0,
     tags: editingMovie?.tags ?? [],
     isEditorChoice: editingMovie?.isEditorChoice ?? false,
-    trailerLink: editingMovie?.trailerLink ?? ""
+    trailerLink: editingMovie?.trailerLink ?? "",
   };
 
   const handleSuccessSnackbarClose = (event: any, reason: string) => {
@@ -288,7 +288,7 @@ const MovieAddEdit = ({ editingMovie }: any) => {
               error={touched.price && !!errors.price}
               helperText={touched.price && errors.price}
             />
-                        <TextField
+            <TextField
               sx={{ margin: "13px 0px" }}
               fullWidth
               name="trailerLink"
