@@ -22,6 +22,7 @@ export interface MovieModel {
   credits: string[];
   cast: string[];
   isEditorChoice: boolean;
+  trailerLink: string;
 }
 
 export interface MovieResponse {

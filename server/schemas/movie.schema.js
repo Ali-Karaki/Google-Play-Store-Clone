@@ -45,6 +45,10 @@ const MovieSchema = new Schema({
     type: Number,
     required: true,
   },
+  downloads: {
+    type: String,
+    required: true,
+  },
   tags: {
     type: [String],
     required: true,
@@ -55,6 +59,10 @@ const MovieSchema = new Schema({
   },
   cast: {
     type: [String],
+    required: true,
+  },
+  trailerLink: {
+    type: String,
     required: true,
   },
   isEditorChoice: {

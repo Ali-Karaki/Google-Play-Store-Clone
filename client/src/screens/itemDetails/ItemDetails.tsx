@@ -6,6 +6,7 @@ import BooksServices from "../../services/books.service";
 import MoviesServices from "../../services/movies.service";
 import UserServices from "../../services/user.service";
 import { WishlistItem } from "../../models/user.model";
+import Youtube from "../../components/youtube/Youtube";
 
 export default function ItemDetails() {
   const location = useLocation();
@@ -145,7 +146,7 @@ export default function ItemDetails() {
                     variant="body2"
                     color="text.primary"
                   >
-                    {item.tags[0]}
+                    {item.tags}
                     {item.category}
                   </Typography>
                   <Typography
@@ -229,10 +230,19 @@ export default function ItemDetails() {
 
               {page === "movies" && (
                 <Typography style={styles.movieDetails}>
-                <p style={styles.desc}>Credits</p>
-                {item.credits.join(", ")}
-              </Typography>
+                  <p style={styles.desc}>Credits</p>
+                  {item.credits.join(", ")}
+                </Typography>
               )}
+
+              {page === "movies" && (
+                <Typography style={styles.movieDetails}>
+                  <p style={styles.desc}>Watch Movie Trailer</p>
+                  
+                </Typography>
+              )}
+
+              {page === "movies" && <Youtube link={item.trailerLink} />}
             </Grid>
             <Grid item xs={2}>
               <img style={styles.logo} src={item.logo} alt={item.name} />
